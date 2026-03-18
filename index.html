@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI SEO Launchpad — Get Found by AI. Get Recommended by LLMs.</title>
+<meta name="description" content="The complete DIY toolkit to get found in Google AI Overview, Knowledge Panel, People Also Search For, and recommended by ChatGPT, Claude, Perplexity & more.">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* ── Hero ───────────────────────────────── */
+.hero {
+  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,58,237,0.22) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; text-align: center; max-width: 860px; margin: 0 auto; }
+.hero-title {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800; line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.2rem;
+}
+.hero-sub {
+  font-size: 1.15rem; color: var(--text-3);
+  max-width: 600px; margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.hero-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+/* ── Stats bar ──────────────────────────── */
+.stats-bar {
+  background: var(--bg-3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 0;
+}
+.stats-bar-inner {
+  display: flex; align-items: center; justify-content: center;
+  gap: 3rem; flex-wrap: wrap;
+}
+.stat-item { text-align: center; }
+.stat-item-num {
+  font-size: 1.5rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-light), var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-item-label { font-size: 0.78rem; color: var(--text-4); margin-top: 0.1rem; }
+
+/* ── Module cards ───────────────────────── */
+.module-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 1.75rem;
+  text-decoration: none;
+  color: inherit;
+  display: flex; flex-direction: column;
+  transition: var(--transition);
+  position: relative; overflow: hidden;
+}
+.module-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--card-gradient, linear-gradient(90deg, var(--primary), var(--cyan)));
+  opacity: 0;
+  transition: var(--transition);
+}
+.module-card:hover { border-color: var(--border-2); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+.module-card:hover::before { opacity: 1; }
+.module-icon {
+  width: 48px; height: 48px;
+  border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+.module-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.module-desc { font-size: 0.88rem; color: var(--text-3); line-height: 1.6; flex: 1; }
+.module-meta { display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap; }
+.module-arrow {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  font-size: 1rem; color: var(--text-4);
+  transition: var(--transition);
+}
+.module-card:hover .module-arrow { color: var(--primary-light); transform: translate(3px,-3px); }
+
+/* ── Why AI SEO ─────────────────────────── */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.why-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+}
+.why-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+.why-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+.why-desc { font-size: 0.84rem; color: var(--text-3); line-height: 1.6; }
+
+/* ── Quick wins ─────────────────────────── */
+.quick-wins { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem 0; }
+.win-list { list-style: none; max-width: 780px; margin: 0 auto; }
+.win-item {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1.25rem;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  margin-bottom: 0.75rem;
+  transition: var(--transition);
+}
+.win-item:hover { border-color: var(--border-2); }
+.win-num {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--primary), var(--cyan));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700; color: #fff;
+}
+.win-title { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+.win-desc { font-size: 0.83rem; color: var(--text-3); line-height: 1.55; }
+
+/* ── AI Bots check ──────────────────────── */
+.robots-check {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 2rem;
+  max-width: 780px; margin: 0 auto;
+}
+.bot-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  gap: 1rem; flex-wrap: wrap;
+}
+.bot-row:last-child { border-bottom: none; }
+.bot-info { display: flex; align-items: center; gap: 0.75rem; }
+.bot-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.bot-name { font-size: 0.9rem; font-weight: 600; }
+.bot-by   { font-size: 0.78rem; color: var(--text-4); }
+.bot-rule {
+  font-family: var(--mono); font-size: 0.78rem;
+  background: var(--bg-input);
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--r);
+  color: var(--green);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.bot-rule:hover { background: var(--bg-4); }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────── -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚀</div>
+    AI SEO Launchpad
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active"><span class="icon">🏠</span> Dashboard</a></li>
+    <li><a href="checklist.html"><span class="icon">✅</span> Checklist</a></li>
+    <li><a href="schema-generator.html"><span class="icon">🧩</span> Schema Generator</a></li>
+    <li><a href="content-optimizer.html"><span class="icon">📊</span> Content Optimizer</a></li>
+    <li><a href="llms-txt.html"><span class="icon">🤖</span> llms.txt Builder</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ────────────────────────────────── -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="eyebrow">🚀 The Complete AI Visibility Toolkit</div>
+    <h1 class="hero-title">
+      Get Found by AI.<br>
+      <span class="grad-text">Get Recommended by LLMs.</span>
+    </h1>
+    <p class="hero-sub">
+      The only DIY toolkit built specifically to get your brand into Google AI Overview, the Knowledge Panel, People Also Search For, ChatGPT, Claude, Perplexity, and every other AI that's reshaping how people discover businesses.
+    </p>
+    <div class="hero-actions">
+      <a href="checklist.html" class="btn btn-primary btn-lg">Start the Checklist →</a>
+      <a href="schema-generator.html" class="btn btn-outline btn-lg">Generate Schema Markup</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats bar ────────────────────────────── -->
+<div class="stats-bar">
+  <div class="container stats-bar-inner">
+    <div class="stat-item">
+      <div class="stat-item-num">102</div>
+      <div class="stat-item-label">Checklist Items</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-item-num">12</div>
+      <div class="stat-item-label">Schema Types</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-item-num">8</div>
+      <div class="stat-item-label">AI Bots Covered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-item-num">5</div>
+      <div class="stat-item-label">Built-in Tools</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-item-num">100%</div>
+      <div class="stat-item-label">Free & Self-Hosted</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tools Grid ───────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">🛠 Your Toolkit</div>
+        <h2 class="section-title">Five Tools. One Mission.</h2>
+        <p class="section-sub">Everything you need to dominate AI search, organized into focused, actionable tools.</p>
+      </div>
+    </div>
+
+    <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));">
+
+      <a href="checklist.html" class="module-card" style="--card-gradient: linear-gradient(90deg,#7c3aed,#06b6d4)">
+        <span class="module-arrow">↗</span>
+        <div class="module-icon" style="background:rgba(124,58,237,0.15)">✅</div>
+        <div class="module-title">102-Point AI SEO Checklist</div>
+        <div class="module-desc">The most comprehensive AI visibility checklist available. Covers technical foundation, schema markup, entity building, E-E-A-T signals, AI Overview optimization, LLM citation building, and more. Track your progress with one click.</div>
+        <div class="module-meta">
+          <span class="badge badge-purple">9 Categories</span>
+          <span class="badge badge-cyan">Progress Tracking</span>
+          <span class="badge badge-green">Saved Locally</span>
+        </div>
+      </a>
+
+      <a href="schema-generator.html" class="module-card" style="--card-gradient: linear-gradient(90deg,#06b6d4,#10b981)">
+        <span class="module-arrow">↗</span>
+        <div class="module-icon" style="background:rgba(6,182,212,0.15)">🧩</div>
+        <div class="module-title">Schema Markup Generator</div>
+        <div class="module-desc">Generate valid JSON-LD structured data for 12 schema types including FAQ, Organization, Person, LocalBusiness, Article, HowTo, Product, and more. Copy & paste directly into your site. AI loves structured data.</div>
+        <div class="module-meta">
+          <span class="badge badge-cyan">12 Schema Types</span>
+          <span class="badge badge-green">Valid JSON-LD</span>
+          <span class="badge badge-amber">1-Click Copy</span>
+        </div>
+      </a>
+
+      <a href="content-optimizer.html" class="module-card" style="--card-gradient: linear-gradient(90deg,#10b981,#f59e0b)">
+        <span class="module-arrow">↗</span>
+        <div class="module-icon" style="background:rgba(16,185,129,0.15)">📊</div>
+        <div class="module-title">AI Content Optimizer</div>
+        <div class="module-desc">Paste any page content and get an instant AI-readiness score with specific recommendations. Includes featured snippet optimizer, FAQ generator, and content templates — all optimized for LLM citation and AI Overview inclusion.</div>
+        <div class="module-meta">
+          <span class="badge badge-green">Content Scoring</span>
+          <span class="badge badge-amber">Templates</span>
+          <span class="badge badge-purple">Snippet Optimizer</span>
+        </div>
+      </a>
+
+      <a href="llms-txt.html" class="module-card" style="--card-gradient: linear-gradient(90deg,#f59e0b,#ec4899)">
+        <span class="module-arrow">↗</span>
+        <div class="module-icon" style="background:rgba(245,158,11,0.15)">🤖</div>
+        <div class="module-title">llms.txt Builder</div>
+        <div class="module-desc">Generate your llms.txt file — the emerging standard that tells AI systems exactly who you are, what you do, and what they should know about your brand. Like robots.txt but for LLMs. Be one of the first to implement it.</div>
+        <div class="module-meta">
+          <span class="badge badge-amber">Emerging Standard</span>
+          <span class="badge badge-cyan">Copy & Deploy</span>
+          <span class="badge badge-green">LLM Friendly</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Why AI SEO ────────────────────────────── -->
+<section class="section" style="background: var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="eyebrow">💡 Why It Matters</div>
+    <h2 class="section-title">Traditional SEO is No Longer Enough</h2>
+    <p class="section-sub">AI is now the first touchpoint for hundreds of millions of searches. If you're not optimized for AI, you're invisible to a massive — and growing — audience.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🔍</div>
+        <div class="why-title">Google AI Overviews</div>
+        <div class="why-desc">Google's AI-generated summaries now appear above organic results for millions of queries. Getting cited here means instant visibility before users even scroll.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💬</div>
+        <div class="why-title">ChatGPT & Claude Recommendations</div>
+        <div class="why-desc">Millions of people ask LLMs "what's the best tool for X?" If your brand isn't in the training data or cited sources, competitors get the recommendation.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔎</div>
+        <div class="why-title">Perplexity & AI Search</div>
+        <div class="why-desc">Perplexity, You.com, and other AI search engines cite sources directly. Optimizing for citation-worthiness drives referral traffic from these fast-growing platforms.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📌</div>
+        <div class="why-title">Knowledge Panel & Entity Graph</div>
+        <div class="why-desc">Google's Knowledge Graph is the backbone of AI understanding. Getting your entity properly established ensures AI systems describe your brand accurately.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔗</div>
+        <div class="why-title">People Also Search For</div>
+        <div class="why-desc">Appearing in this feature means Google associates your brand with the topics people care about. Topic cluster content and entity relationships make this happen.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <div class="why-title">First-Mover Advantage</div>
+        <div class="why-desc">Most brands are still ignoring AI SEO. Implementing now means establishing authority while the field is wide open — before it becomes as competitive as traditional SEO.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Quick Wins ────────────────────────────── -->
+<section class="quick-wins">
+  <div class="container">
+    <div class="eyebrow" style="display:block; text-align:center; margin:0 auto 1rem;">⚡ Today's Action Plan</div>
+    <h2 class="section-title text-center mb-2">5 Quick Wins You Can Do Right Now</h2>
+    <p class="text-muted text-center mb-3" style="max-width:540px;margin:0 auto 2.5rem;">These five actions have the highest impact-to-effort ratio. Do them first, before anything else.</p>
+    <ul class="win-list">
+      <li class="win-item">
+        <div class="win-num">1</div>
+        <div>
+          <div class="win-title">Allow AI bots in your robots.txt</div>
+          <div class="win-desc">Many sites accidentally block GPTBot, ClaudeBot, and PerplexityBot — the crawlers used by major LLMs. If they can't crawl you, they can't cite you. Check and fix this in under 5 minutes. <a href="#robots" style="color:var(--primary-light)">See the exact rules below →</a></div>
+        </div>
+      </li>
+      <li class="win-item">
+        <div class="win-num">2</div>
+        <div>
+          <div class="win-title">Add FAQ Schema to your top 5 pages</div>
+          <div class="win-desc">FAQ schema is the single most effective schema type for Google AI Overview inclusion. Use our <a href="schema-generator.html" style="color:var(--primary-light)">Schema Generator</a> to create it in 2 minutes and paste it into your page's &lt;head&gt;.</div>
+        </div>
+      </li>
+      <li class="win-item">
+        <div class="win-num">3</div>
+        <div>
+          <div class="win-title">Create your llms.txt file</div>
+          <div class="win-desc">llms.txt is like a business card for AI systems. It tells LLMs exactly who you are, what you offer, and what pages are most important. Use our <a href="llms-txt.html" style="color:var(--primary-light)">llms.txt Builder</a> and deploy it to your domain root in minutes.</div>
+        </div>
+      </li>
+      <li class="win-item">
+        <div class="win-num">4</div>
+        <div>
+          <div class="win-title">Add a 50-word direct answer to every key page</div>
+          <div class="win-desc">Google AI Overview pulls from the most concise, direct answer on the page. Rewrite your intro paragraph as a crisp 40-60 word answer to the main question that page covers. This alone can dramatically increase AI Overview citations.</div>
+        </div>
+      </li>
+      <li class="win-item">
+        <div class="win-num">5</div>
+        <div>
+          <div class="win-title">Add Organization schema with sameAs to your homepage</div>
+          <div class="win-desc">Organization schema with sameAs links to all your social profiles, Crunchbase, LinkedIn, and Wikipedia (if you have one) tells Google exactly who you are as an entity. This is foundational for Knowledge Panel and AI accuracy. Generate it free in our <a href="schema-generator.html" style="color:var(--primary-light)">Schema Generator</a>.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── AI Bot Reference ──────────────────────── -->
+<section class="section" id="robots">
+  <div class="container">
+    <div class="eyebrow">🤖 robots.txt Reference</div>
+    <h2 class="section-title">Allow All AI Crawlers</h2>
+    <p class="section-sub">Add these rules to your robots.txt to ensure every major AI system can crawl and learn from your content. Click any rule to copy it.</p>
+
+    <div class="robots-check">
+      <div class="alert alert-warn">
+        <div class="alert-icon">⚠️</div>
+        <div><strong>Default is blocked for some.</strong> Some AI bots require explicit opt-in in your robots.txt. If you have a blanket <code>Disallow: /</code> for unknown user-agents, AI bots may be unable to crawl your site.</div>
+      </div>
+
+      <div id="botList">
+        <!-- populated by JS -->
+      </div>
+
+      <div class="mt-3">
+        <div class="flex-between mb-1">
+          <span class="text-sm bold">Complete robots.txt snippet for all AI bots</span>
+          <button class="btn btn-sm btn-outline copy-btn" onclick="copyRobots(this)">Copy All</button>
+        </div>
+        <pre id="robotsSnippet"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <p class="mb-1"><strong>AI SEO Launchpad</strong> — Your complete toolkit for AI-driven visibility</p>
+    <p>Tools: <a href="checklist.html" style="color:var(--primary-light)">Checklist</a> · <a href="schema-generator.html" style="color:var(--primary-light)">Schema Generator</a> · <a href="content-optimizer.html" style="color:var(--primary-light)">Content Optimizer</a> · <a href="llms-txt.html" style="color:var(--primary-light)">llms.txt Builder</a></p>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+<script>
+const AI_BOTS = [
+  { name: 'GPTBot',        by: 'OpenAI / ChatGPT',   color: '#10b981', agent: 'GPTBot' },
+  { name: 'ClaudeBot',     by: 'Anthropic / Claude',  color: '#7c3aed', agent: 'ClaudeBot' },
+  { name: 'PerplexityBot', by: 'Perplexity AI',       color: '#06b6d4', agent: 'PerplexityBot' },
+  { name: 'YouBot',        by: 'You.com',             color: '#f59e0b', agent: 'YouBot' },
+  { name: 'cohere-ai',     by: 'Cohere',              color: '#ec4899', agent: 'cohere-ai' },
+  { name: 'Bytespider',    by: 'ByteDance / TikTok',  color: '#ef4444', agent: 'Bytespider' },
+  { name: 'CCBot',         by: 'Common Crawl (AI training)', color: '#94a3b8', agent: 'CCBot' },
+  { name: 'anthropic-ai',  by: 'Anthropic crawler',   color: '#a78bfa', agent: 'anthropic-ai' },
+];
+
+const list = document.getElementById('botList');
+const snippet = document.getElementById('robotsSnippet');
+let snippetText = '';
+
+AI_BOTS.forEach(b => {
+  const rule = `User-agent: ${b.agent}\nAllow: /`;
+  snippetText += rule + '\n\n';
+  const row = document.createElement('div');
+  row.className = 'bot-row';
+  row.innerHTML = `
+    <div class="bot-info">
+      <div class="bot-dot" style="background:${b.color}"></div>
+      <div>
+        <div class="bot-name">${b.name}</div>
+        <div class="bot-by">${b.by}</div>
+      </div>
+    </div>
+    <div class="bot-rule" onclick="copyText('${rule}', this)" title="Click to copy">User-agent: ${b.agent} / Allow: /</div>
+  `;
+  list.appendChild(row);
+});
+
+snippet.textContent = snippetText.trim();
+
+function copyRobots(btn) {
+  copyText(snippetText.trim(), btn);
+}
+</script>
+</body>
+</html>

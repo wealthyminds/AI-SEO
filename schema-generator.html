@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schema Markup Generator — AI SEO Launchpad</title>
+<meta name="description" content="Generate valid JSON-LD structured data for 12 schema types. FAQ, Organization, Person, LocalBusiness, Article, HowTo, Product, and more. Copy and paste into your site.">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.gen-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .gen-layout { grid-template-columns: 1fr; }
+}
+.schema-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+.schema-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--bg-3); border: 1px solid var(--border);
+  border-radius: var(--r-lg); cursor: pointer;
+  font-family: var(--font); font-size: 0.85rem; font-weight: 500;
+  color: var(--text-3);
+  transition: var(--transition); text-align: left;
+}
+.schema-btn:hover { border-color: var(--border-2); color: var(--text); background: var(--bg-4); }
+.schema-btn.active {
+  border-color: var(--primary); background: rgba(124,58,237,0.12);
+  color: var(--primary-light);
+}
+.schema-btn-icon { font-size: 1rem; flex-shrink: 0; }
+
+.output-panel {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: sticky; top: calc(var(--nav-h) + 1rem);
+}
+.output-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-4);
+}
+.output-header-title { font-size: 0.88rem; font-weight: 600; color: var(--text-2); }
+.output-body { padding: 0; }
+.output-body pre {
+  margin: 0; border: none; border-radius: 0;
+  max-height: 500px; overflow-y: auto;
+  font-size: 0.8rem;
+}
+.output-tip {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem; color: var(--text-4);
+  line-height: 1.5;
+}
+
+.form-section {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 1.75rem;
+}
+.form-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+.form-sub { font-size: 0.83rem; color: var(--text-3); margin-bottom: 1.5rem; line-height: 1.55; }
+
+.array-group {
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+.array-group-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+.array-group-title { font-size: 0.84rem; font-weight: 600; color: var(--text-2); }
+.add-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  background: rgba(124,58,237,0.1); border: 1px dashed rgba(124,58,237,0.3);
+  border-radius: var(--r); cursor: pointer;
+  font-family: var(--font); font-size: 0.82rem; font-weight: 600;
+  color: var(--primary-light); transition: var(--transition); width: 100%;
+  justify-content: center; margin-top: 0.5rem;
+}
+.add-btn:hover { background: rgba(124,58,237,0.18); }
+.remove-btn {
+  background: rgba(239,68,68,0.1); border: none; cursor: pointer;
+  color: var(--red); font-size: 0.85rem; padding: 0.25rem 0.5rem;
+  border-radius: var(--r); transition: var(--transition);
+}
+.remove-btn:hover { background: rgba(239,68,68,0.2); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚀</div>
+    AI SEO Launchpad
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><span class="icon">🏠</span> Dashboard</a></li>
+    <li><a href="checklist.html"><span class="icon">✅</span> Checklist</a></li>
+    <li><a href="schema-generator.html" class="active"><span class="icon">🧩</span> Schema Generator</a></li>
+    <li><a href="content-optimizer.html"><span class="icon">📊</span> Content Optimizer</a></li>
+    <li><a href="llms-txt.html"><span class="icon">🤖</span> llms.txt Builder</a></li>
+  </ul>
+</nav>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="eyebrow">🧩 Structured Data</div>
+    <h1 class="section-title">Schema Markup Generator</h1>
+    <p class="section-sub">Generate valid JSON-LD for 12 schema types. Structured data is the language AI systems read — implementing it correctly dramatically boosts AI citation rates. Select a type, fill in the form, and copy the output.</p>
+  </div>
+</section>
+
+<div class="container" style="padding-bottom: 5rem;">
+
+  <!-- Schema type picker -->
+  <div class="schema-picker">
+    <button class="schema-btn active" data-type="faq" onclick="switchSchema('faq',this)"><span class="schema-btn-icon">❓</span>FAQ</button>
+    <button class="schema-btn" data-type="organization" onclick="switchSchema('organization',this)"><span class="schema-btn-icon">🏢</span>Organization</button>
+    <button class="schema-btn" data-type="person" onclick="switchSchema('person',this)"><span class="schema-btn-icon">👤</span>Person</button>
+    <button class="schema-btn" data-type="localbusiness" onclick="switchSchema('localbusiness',this)"><span class="schema-btn-icon">📍</span>LocalBusiness</button>
+    <button class="schema-btn" data-type="article" onclick="switchSchema('article',this)"><span class="schema-btn-icon">📝</span>Article</button>
+    <button class="schema-btn" data-type="howto" onclick="switchSchema('howto',this)"><span class="schema-btn-icon">📋</span>HowTo</button>
+    <button class="schema-btn" data-type="product" onclick="switchSchema('product',this)"><span class="schema-btn-icon">📦</span>Product</button>
+    <button class="schema-btn" data-type="website" onclick="switchSchema('website',this)"><span class="schema-btn-icon">🌐</span>WebSite</button>
+    <button class="schema-btn" data-type="breadcrumb" onclick="switchSchema('breadcrumb',this)"><span class="schema-btn-icon">🧭</span>BreadcrumbList</button>
+    <button class="schema-btn" data-type="service" onclick="switchSchema('service',this)"><span class="schema-btn-icon">⚙️</span>Service</button>
+    <button class="schema-btn" data-type="event" onclick="switchSchema('event',this)"><span class="schema-btn-icon">🗓</span>Event</button>
+    <button class="schema-btn" data-type="review" onclick="switchSchema('review',this)"><span class="schema-btn-icon">⭐</span>Review</button>
+  </div>
+
+  <div class="gen-layout">
+    <!-- Form panel -->
+    <div id="formPanel">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- Output panel -->
+    <div class="output-panel">
+      <div class="output-header">
+        <div class="output-header-title">📋 Generated JSON-LD</div>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-sm btn-outline copy-btn" id="copySchemaBtn" onclick="copySchema(this)">Copy Code</button>
+          <button class="btn btn-sm btn-ghost" onclick="downloadSchema()">⬇ Download</button>
+        </div>
+      </div>
+      <div class="output-body">
+        <pre id="schemaOutput"><code>// Fill in the form to generate schema markup</code></pre>
+      </div>
+      <div class="output-tip">
+        💡 Paste this inside a <code>&lt;script type="application/ld+json"&gt;</code> tag in your page's <code>&lt;head&gt;</code>. Validate at <strong>search.google.com/test/rich-results</strong> before deploying.
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>AI SEO Launchpad — <a href="index.html" style="color:var(--primary-light)">Back to Dashboard</a></p>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+<script>
+// ── Schema form definitions ────────────────────────────────────────────
+const SCHEMAS = {
+
+  faq: {
+    title: 'FAQ Schema',
+    icon: '❓',
+    impact: 'highest',
+    desc: 'FAQ schema is the #1 most impactful schema type for Google AI Overview inclusion. Add at least 5 questions for maximum effect. Place on any page where you answer user questions.',
+    render(container, generate) {
+      let faqCount = 3;
+      const saved = [];
+      for (let i = 0; i < faqCount; i++) saved.push({ q: '', a: '' });
+
+      function buildForm() {
+        container.innerHTML = `
+          <div class="form-section">
+            <div class="form-title">❓ FAQ Schema</div>
+            <div class="form-sub">${SCHEMAS.faq.desc}</div>
+            <div id="faqItems">${saved.map((f,i) => faqRow(i, f.q, f.a)).join('')}</div>
+            <button class="add-btn" onclick="addFaq()">+ Add Question</button>
+          </div>`;
+        attachListeners();
+      }
+
+      function faqRow(i, q, a) {
+        return `
+          <div class="array-group" id="faq-${i}">
+            <div class="array-group-header">
+              <span class="array-group-title">Question ${i + 1}</span>
+              ${i > 0 ? `<button class="remove-btn" onclick="removeFaq(${i})">✕ Remove</button>` : ''}
+            </div>
+            <div class="field">
+              <label>Question</label>
+              <input type="text" class="faq-q" placeholder="What is your return policy?" value="${escHtml(q)}">
+            </div>
+            <div class="field">
+              <label>Answer</label>
+              <textarea class="faq-a" rows="3" placeholder="We offer a 30-day no-questions-asked return policy...">${escHtml(a)}</textarea>
+            </div>
+          </div>`;
+      }
+
+      function attachListeners() {
+        container.querySelectorAll('.faq-q, .faq-a').forEach(el => {
+          el.addEventListener('input', generateFromForm);
+        });
+      }
+
+      function generateFromForm() {
+        const qs = [...container.querySelectorAll('.faq-q')].map(e => e.value.trim());
+        const as = [...container.querySelectorAll('.faq-a')].map(e => e.value.trim());
+        const entities = qs.map((q, i) => ({
+          "@type": "Question",
+          "name": q || "Your question here",
+          "acceptedAnswer": { "@type": "Answer", "text": as[i] || "Your answer here" }
+        })).filter(e => e.name !== "Your question here");
+        const schema = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": entities.length ? entities : [{ "@type": "Question", "name": "Sample Question?", "acceptedAnswer": { "@type": "Answer", "text": "Sample answer." }}]
+        };
+        generate(schema);
+      }
+
+      window.addFaq = function() {
+        saved.push({ q: '', a: '' });
+        faqCount++;
+        const div = document.createElement('div');
+        div.innerHTML = faqRow(faqCount - 1, '', '');
+        container.querySelector('#faqItems').appendChild(div.firstElementChild);
+        attachListeners();
+        generateFromForm();
+      };
+      window.removeFaq = function(i) {
+        const el = document.getElementById(`faq-${i}`);
+        if (el) el.remove();
+        generateFromForm();
+      };
+
+      buildForm();
+      generateFromForm();
+    }
+  },
+
+  organization: {
+    title: 'Organization',
+    desc: 'Organization schema tells Google exactly who you are as an entity. The sameAs field is critical — it links your site to your social profiles and databases, establishing your entity identity in Google\'s Knowledge Graph.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">🏢 Organization Schema</div>
+          <div class="form-sub">${SCHEMAS.organization.desc}</div>
+          <div class="field"><label>Organization Name *</label><input type="text" id="org-name" placeholder="Acme Marketing Agency" oninput="genOrg()"></div>
+          <div class="field"><label>Website URL *</label><input type="url" id="org-url" placeholder="https://example.com" oninput="genOrg()"></div>
+          <div class="field"><label>Logo URL</label><input type="url" id="org-logo" placeholder="https://example.com/logo.png" oninput="genOrg()"></div>
+          <div class="field"><label>Description (1-2 sentences)</label><textarea id="org-desc" rows="2" placeholder="Acme is a full-service digital marketing agency specializing in AI SEO and content strategy." oninput="genOrg()"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Founding Year</label><input type="text" id="org-year" placeholder="2018" oninput="genOrg()"></div>
+            <div class="field"><label>Email</label><input type="email" id="org-email" placeholder="hello@example.com" oninput="genOrg()"></div>
+          </div>
+          <div class="field"><label>Phone</label><input type="text" id="org-phone" placeholder="+1-555-123-4567" oninput="genOrg()"></div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">sameAs Links <span class="badge badge-purple">Critical for Knowledge Panel</span></div>
+          <div class="field"><label>LinkedIn</label><input type="url" id="org-li" placeholder="https://linkedin.com/company/yourcompany" oninput="genOrg()"></div>
+          <div class="field"><label>Twitter / X</label><input type="url" id="org-tw" placeholder="https://twitter.com/yourhandle" oninput="genOrg()"></div>
+          <div class="field"><label>Facebook</label><input type="url" id="org-fb" placeholder="https://facebook.com/yourpage" oninput="genOrg()"></div>
+          <div class="field"><label>YouTube</label><input type="url" id="org-yt" placeholder="https://youtube.com/@yourchannel" oninput="genOrg()"></div>
+          <div class="field"><label>Crunchbase</label><input type="url" id="org-cb" placeholder="https://crunchbase.com/organization/yourco" oninput="genOrg()"></div>
+          <div class="field"><label>Wikipedia (if applicable)</label><input type="url" id="org-wp" placeholder="https://en.wikipedia.org/wiki/YourBrand" oninput="genOrg()"></div>
+          <div class="field"><label>Instagram</label><input type="url" id="org-ig" placeholder="https://instagram.com/yourhandle" oninput="genOrg()"></div>
+        </div>`;
+      genOrg();
+    }
+  },
+
+  person: {
+    title: 'Person',
+    desc: 'Person schema builds author authority — a key E-E-A-T signal. Use on author bio pages, about pages, or any page attributed to a specific expert. The sameAs field links to LinkedIn, Twitter, and other profile pages.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">👤 Person Schema</div>
+          <div class="form-sub">${SCHEMAS.person.desc}</div>
+          <div class="field-row">
+            <div class="field"><label>First Name *</label><input type="text" id="p-first" placeholder="Sarah" oninput="genPerson()"></div>
+            <div class="field"><label>Last Name *</label><input type="text" id="p-last" placeholder="Johnson" oninput="genPerson()"></div>
+          </div>
+          <div class="field"><label>Job Title</label><input type="text" id="p-job" placeholder="Senior SEO Strategist" oninput="genPerson()"></div>
+          <div class="field"><label>Profile Page URL</label><input type="url" id="p-url" placeholder="https://example.com/team/sarah-johnson" oninput="genPerson()"></div>
+          <div class="field"><label>Photo URL</label><input type="url" id="p-img" placeholder="https://example.com/images/sarah.jpg" oninput="genPerson()"></div>
+          <div class="field"><label>Bio / Description</label><textarea id="p-desc" rows="3" placeholder="Sarah is a 10-year SEO veteran specializing in AI-driven content strategy for B2B SaaS companies." oninput="genPerson()"></textarea></div>
+          <div class="field"><label>Employer / Organization Name</label><input type="text" id="p-employer" placeholder="Acme Marketing" oninput="genPerson()"></div>
+          <div class="field"><label>Employer URL</label><input type="url" id="p-employer-url" placeholder="https://example.com" oninput="genPerson()"></div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Social Profiles (sameAs)</div>
+          <div class="field"><label>LinkedIn</label><input type="url" id="p-li" placeholder="https://linkedin.com/in/sarahjohnson" oninput="genPerson()"></div>
+          <div class="field"><label>Twitter / X</label><input type="url" id="p-tw" placeholder="https://twitter.com/sarahjohnson" oninput="genPerson()"></div>
+          <div class="field"><label>Personal Website</label><input type="url" id="p-web" placeholder="https://sarahjohnson.com" oninput="genPerson()"></div>
+        </div>`;
+      genPerson();
+    }
+  },
+
+  localbusiness: {
+    title: 'LocalBusiness',
+    desc: 'LocalBusiness schema feeds Google Maps, local AI search, and Siri. Include as much detail as possible — every field adds entity richness that AI uses to accurately answer local queries.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">📍 LocalBusiness Schema</div>
+          <div class="form-sub">${SCHEMAS.localbusiness.desc}</div>
+          <div class="field"><label>Business Name *</label><input type="text" id="lb-name" placeholder="City Dental Care" oninput="genLB()"></div>
+          <div class="field"><label>Business Type</label>
+            <select id="lb-type" onchange="genLB()">
+              <option value="LocalBusiness">LocalBusiness (Generic)</option>
+              <option value="MedicalBusiness">MedicalBusiness</option>
+              <option value="DentalClinic">DentalClinic</option>
+              <option value="LegalService">LegalService</option>
+              <option value="FinancialService">FinancialService</option>
+              <option value="Restaurant">Restaurant</option>
+              <option value="Store">Store</option>
+              <option value="AutoDealer">AutoDealer</option>
+              <option value="RealEstateAgent">RealEstateAgent</option>
+              <option value="ProfessionalService">ProfessionalService</option>
+              <option value="HomeAndConstructionBusiness">HomeAndConstruction</option>
+              <option value="SportsActivityLocation">SportsActivityLocation</option>
+              <option value="TouristAttraction">TouristAttraction</option>
+            </select>
+          </div>
+          <div class="field"><label>Website URL</label><input type="url" id="lb-url" placeholder="https://citydental.com" oninput="genLB()"></div>
+          <div class="field"><label>Description</label><textarea id="lb-desc" rows="2" placeholder="City Dental Care provides comprehensive dental services in downtown Chicago..." oninput="genLB()"></textarea></div>
+          <div class="field"><label>Street Address</label><input type="text" id="lb-street" placeholder="123 Main Street, Suite 100" oninput="genLB()"></div>
+          <div class="field-row">
+            <div class="field"><label>City</label><input type="text" id="lb-city" placeholder="Chicago" oninput="genLB()"></div>
+            <div class="field"><label>State / Region</label><input type="text" id="lb-state" placeholder="IL" oninput="genLB()"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Zip / Postal Code</label><input type="text" id="lb-zip" placeholder="60601" oninput="genLB()"></div>
+            <div class="field"><label>Country Code</label><input type="text" id="lb-country" placeholder="US" oninput="genLB()"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Phone</label><input type="text" id="lb-phone" placeholder="+1-312-555-0100" oninput="genLB()"></div>
+            <div class="field"><label>Email</label><input type="email" id="lb-email" placeholder="info@citydental.com" oninput="genLB()"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Latitude</label><input type="text" id="lb-lat" placeholder="41.8781" oninput="genLB()"></div>
+            <div class="field"><label>Longitude</label><input type="text" id="lb-lng" placeholder="-87.6298" oninput="genLB()"></div>
+          </div>
+          <div class="field"><label>Price Range</label>
+            <select id="lb-price" onchange="genLB()">
+              <option value="">— Select —</option>
+              <option value="$">$ (Inexpensive)</option>
+              <option value="$$">$$ (Moderate)</option>
+              <option value="$$$">$$$ (Expensive)</option>
+              <option value="$$$$">$$$$ (Very Expensive)</option>
+            </select>
+          </div>
+          <div class="field"><label>Opening Hours (e.g. Mo-Fr 09:00-17:00)</label><input type="text" id="lb-hours" placeholder="Mo-Fr 09:00-17:00, Sa 10:00-14:00" oninput="genLB()"></div>
+          <div class="field-row">
+            <div class="field"><label>Aggregate Rating (1-5)</label><input type="number" id="lb-rating" min="1" max="5" step="0.1" placeholder="4.8" oninput="genLB()"></div>
+            <div class="field"><label>Review Count</label><input type="number" id="lb-rcount" placeholder="247" oninput="genLB()"></div>
+          </div>
+        </div>`;
+      genLB();
+    }
+  },
+
+  article: {
+    title: 'Article',
+    desc: 'Article schema tells AI systems who wrote the content, when it was published, and who published it. The author sameAs links and dateModified field are especially important for E-E-A-T and content freshness signals.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">📝 Article / BlogPosting Schema</div>
+          <div class="form-sub">${SCHEMAS.article.desc}</div>
+          <div class="field"><label>Article Type</label>
+            <select id="art-type" onchange="genArticle()">
+              <option value="Article">Article</option>
+              <option value="BlogPosting">BlogPosting</option>
+              <option value="NewsArticle">NewsArticle</option>
+              <option value="TechArticle">TechArticle</option>
+            </select>
+          </div>
+          <div class="field"><label>Headline *</label><input type="text" id="art-hl" placeholder="10 AI SEO Strategies That Actually Work in 2025" oninput="genArticle()"></div>
+          <div class="field"><label>Article URL</label><input type="url" id="art-url" placeholder="https://example.com/blog/ai-seo-strategies" oninput="genArticle()"></div>
+          <div class="field"><label>Featured Image URL</label><input type="url" id="art-img" placeholder="https://example.com/images/ai-seo-strategies.jpg" oninput="genArticle()"></div>
+          <div class="field"><label>Article Description (meta description)</label><textarea id="art-desc" rows="2" placeholder="Discover 10 proven AI SEO strategies that drive visibility in Google AI Overview, ChatGPT, and Perplexity." oninput="genArticle()"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Date Published</label><input type="text" id="art-pub" placeholder="2025-01-15" oninput="genArticle()"></div>
+            <div class="field"><label>Date Modified</label><input type="text" id="art-mod" placeholder="2025-03-01" oninput="genArticle()"></div>
+          </div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Author</div>
+          <div class="field-row">
+            <div class="field"><label>Author Name</label><input type="text" id="art-auth" placeholder="Sarah Johnson" oninput="genArticle()"></div>
+            <div class="field"><label>Author Page URL</label><input type="url" id="art-auth-url" placeholder="https://example.com/team/sarah" oninput="genArticle()"></div>
+          </div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Publisher</div>
+          <div class="field-row">
+            <div class="field"><label>Publisher Name</label><input type="text" id="art-pub-name" placeholder="Acme Marketing Blog" oninput="genArticle()"></div>
+            <div class="field"><label>Publisher Logo URL</label><input type="url" id="art-pub-logo" placeholder="https://example.com/logo.png" oninput="genArticle()"></div>
+          </div>
+        </div>`;
+      genArticle();
+    }
+  },
+
+  howto: {
+    title: 'HowTo',
+    desc: 'HowTo schema marks up step-by-step instructional content. Heavily featured in Google AI Overviews for "how to" queries. Include tools/supply information for richer results.',
+    render(container, generate) {
+      let stepCount = 3;
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">📋 HowTo Schema</div>
+          <div class="form-sub">${SCHEMAS.howto.desc}</div>
+          <div class="field"><label>Title / Task Name *</label><input type="text" id="ht-name" placeholder="How to Set Up FAQ Schema on Your Website" oninput="genHowTo()"></div>
+          <div class="field"><label>Description</label><textarea id="ht-desc" rows="2" placeholder="A step-by-step guide to implementing FAQ schema markup for better AI visibility." oninput="genHowTo()"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Total Time (ISO 8601)</label><input type="text" id="ht-time" placeholder="PT30M" oninput="genHowTo()"><div class="hint">PT30M = 30 min, PT1H = 1 hour, PT2H30M = 2.5 hours</div></div>
+            <div class="field"><label>Estimated Cost</label><input type="text" id="ht-cost" placeholder="$0" oninput="genHowTo()"></div>
+          </div>
+          <div class="field"><label>Tools / Supplies Needed (comma-separated)</label><input type="text" id="ht-tools" placeholder="Text editor, Google Search Console, Schema validator" oninput="genHowTo()"></div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Steps</div>
+          <div id="htSteps">${[...Array(stepCount)].map((_,i) => htStepRow(i)).join('')}</div>
+          <button class="add-btn" onclick="addHtStep()">+ Add Step</button>
+        </div>`;
+      genHowTo();
+
+      function htStepRow(i) {
+        return `<div class="array-group" id="hts-${i}">
+          <div class="array-group-header">
+            <span class="array-group-title">Step ${i+1}</span>
+            ${i > 0 ? `<button class="remove-btn" onclick="removeHtStep(${i})">✕</button>` : ''}
+          </div>
+          <div class="field"><label>Step Name</label><input class="hts-name" type="text" placeholder="Open your site's &lt;head&gt; HTML" oninput="genHowTo()"></div>
+          <div class="field"><label>Step Instructions</label><textarea class="hts-text" rows="2" placeholder="Navigate to your site's HTML and find the &lt;head&gt; section..." oninput="genHowTo()"></textarea></div>
+        </div>`;
+      }
+      window.addHtStep = function() {
+        stepCount++;
+        const div = document.createElement('div');
+        div.innerHTML = htStepRow(stepCount - 1);
+        document.getElementById('htSteps').appendChild(div.firstElementChild);
+        genHowTo();
+      };
+      window.removeHtStep = function(i) {
+        const el = document.getElementById(`hts-${i}`);
+        if (el) { el.remove(); genHowTo(); }
+      };
+    }
+  },
+
+  product: {
+    title: 'Product',
+    desc: 'Product schema enables Google to show rich snippets with price, availability, and ratings. Essential for e-commerce and SaaS product pages. AI uses this to answer "how much does X cost?" and "is X available?" queries.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">📦 Product Schema</div>
+          <div class="form-sub">${SCHEMAS.product.desc}</div>
+          <div class="field"><label>Product Name *</label><input type="text" id="pr-name" placeholder="AI SEO Pro Subscription" oninput="genProduct()"></div>
+          <div class="field"><label>Description</label><textarea id="pr-desc" rows="3" placeholder="The complete AI SEO toolkit for agencies and freelancers. Includes schema generator, content optimizer, and LLM visibility tools." oninput="genProduct()"></textarea></div>
+          <div class="field"><label>Product Image URL</label><input type="url" id="pr-img" placeholder="https://example.com/product-image.jpg" oninput="genProduct()"></div>
+          <div class="field"><label>Brand / Manufacturer</label><input type="text" id="pr-brand" placeholder="Acme Tools" oninput="genProduct()"></div>
+          <div class="field"><label>SKU / Product ID</label><input type="text" id="pr-sku" placeholder="AISEO-PRO-001" oninput="genProduct()"></div>
+          <div class="field"><label>Product URL</label><input type="url" id="pr-url" placeholder="https://example.com/products/ai-seo-pro" oninput="genProduct()"></div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Pricing</div>
+          <div class="field-row">
+            <div class="field"><label>Price</label><input type="text" id="pr-price" placeholder="97" oninput="genProduct()"></div>
+            <div class="field"><label>Currency</label><input type="text" id="pr-currency" placeholder="USD" oninput="genProduct()"></div>
+          </div>
+          <div class="field"><label>Availability</label>
+            <select id="pr-avail" onchange="genProduct()">
+              <option value="https://schema.org/InStock">In Stock</option>
+              <option value="https://schema.org/OutOfStock">Out of Stock</option>
+              <option value="https://schema.org/PreOrder">Pre-Order</option>
+              <option value="https://schema.org/SoldOut">Sold Out</option>
+            </select>
+          </div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Reviews (optional)</div>
+          <div class="field-row">
+            <div class="field"><label>Average Rating (1-5)</label><input type="number" id="pr-rating" min="1" max="5" step="0.1" placeholder="4.9" oninput="genProduct()"></div>
+            <div class="field"><label>Review Count</label><input type="number" id="pr-rcount" placeholder="312" oninput="genProduct()"></div>
+          </div>
+        </div>`;
+      genProduct();
+    }
+  },
+
+  website: {
+    title: 'WebSite',
+    desc: 'WebSite schema with SearchAction enables the Google Sitelinks Search Box. It tells AI systems the name of your site and enables site:search functionality that boosts navigational queries.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">🌐 WebSite Schema</div>
+          <div class="form-sub">${SCHEMAS.website.desc}</div>
+          <div class="field"><label>Site Name *</label><input type="text" id="ws-name" placeholder="Acme Marketing" oninput="genWebSite()"></div>
+          <div class="field"><label>Site URL *</label><input type="url" id="ws-url" placeholder="https://example.com" oninput="genWebSite()"></div>
+          <div class="field"><label>Alternate Names (comma-separated)</label><input type="text" id="ws-alt" placeholder="Acme, AcmeMktg" oninput="genWebSite()"></div>
+          <div class="field" style="display:flex;align-items:center;gap:0.75rem;">
+            <input type="checkbox" id="ws-search" onchange="genWebSite()" style="width:auto;">
+            <label for="ws-search" style="margin:0;cursor:pointer;">Include SearchAction (Sitelinks Search Box)</label>
+          </div>
+          <div class="field" id="ws-search-url-field" style="display:none;">
+            <label>Search URL Pattern</label>
+            <input type="text" id="ws-search-url" placeholder="https://example.com/?s={search_term_string}" oninput="genWebSite()">
+            <div class="hint">Replace your search query placeholder with {search_term_string}</div>
+          </div>
+        </div>`;
+      document.getElementById('ws-search').addEventListener('change', function() {
+        document.getElementById('ws-search-url-field').style.display = this.checked ? 'block' : 'none';
+      });
+      genWebSite();
+    }
+  },
+
+  breadcrumb: {
+    title: 'BreadcrumbList',
+    desc: 'Breadcrumb schema helps AI understand site hierarchy and creates navigational breadcrumbs in search results. Add to every page except the homepage.',
+    render(container, generate) {
+      let crumbCount = 3;
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">🧭 BreadcrumbList Schema</div>
+          <div class="form-sub">${SCHEMAS.breadcrumb.desc}</div>
+          <div id="crumbItems">${[...Array(crumbCount)].map((_,i) => crumbRow(i)).join('')}</div>
+          <button class="add-btn" onclick="addCrumb()">+ Add Breadcrumb</button>
+        </div>`;
+      genBreadcrumb();
+
+      function crumbRow(i) {
+        const defaults = [
+          { name: 'Home', url: 'https://example.com' },
+          { name: 'Blog', url: 'https://example.com/blog' },
+          { name: 'AI SEO Guide', url: 'https://example.com/blog/ai-seo' }
+        ];
+        const d = defaults[i] || { name: '', url: '' };
+        return `<div class="array-group" id="crumb-${i}">
+          <div class="array-group-header">
+            <span class="array-group-title">Level ${i+1}</span>
+            ${i > 0 ? `<button class="remove-btn" onclick="removeCrumb(${i})">✕</button>` : ''}
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Name</label><input class="crumb-name" type="text" value="${d.name}" placeholder="Page Name" oninput="genBreadcrumb()"></div>
+            <div class="field"><label>URL</label><input class="crumb-url" type="url" value="${d.url}" placeholder="https://example.com/page" oninput="genBreadcrumb()"></div>
+          </div>
+        </div>`;
+      }
+      window.addCrumb = function() {
+        crumbCount++;
+        const div = document.createElement('div');
+        div.innerHTML = crumbRow(crumbCount - 1);
+        document.getElementById('crumbItems').appendChild(div.firstElementChild);
+        genBreadcrumb();
+      };
+      window.removeCrumb = function(i) {
+        const el = document.getElementById(`crumb-${i}`);
+        if (el) { el.remove(); genBreadcrumb(); }
+      };
+    }
+  },
+
+  service: {
+    title: 'Service',
+    desc: 'Service schema explicitly defines the services you offer, who they\'re for, where you provide them, and at what price. AI uses this to match your business to service-intent queries.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">⚙️ Service Schema</div>
+          <div class="form-sub">${SCHEMAS.service.desc}</div>
+          <div class="field"><label>Service Name *</label><input type="text" id="sv-name" placeholder="AI SEO Consulting" oninput="genService()"></div>
+          <div class="field"><label>Service Type</label><input type="text" id="sv-type" placeholder="SearchEngineOptimizationService" oninput="genService()"></div>
+          <div class="field"><label>Description</label><textarea id="sv-desc" rows="3" placeholder="Comprehensive AI SEO consulting to help businesses rank in Google AI Overview and get recommended by LLMs." oninput="genService()"></textarea></div>
+          <div class="field"><label>Service URL</label><input type="url" id="sv-url" placeholder="https://example.com/services/ai-seo" oninput="genService()"></div>
+          <div class="field"><label>Provider Name</label><input type="text" id="sv-prov" placeholder="Acme Marketing Agency" oninput="genService()"></div>
+          <div class="field"><label>Provider URL</label><input type="url" id="sv-prov-url" placeholder="https://example.com" oninput="genService()"></div>
+          <div class="field"><label>Area Served</label><input type="text" id="sv-area" placeholder="United States, Canada, United Kingdom" oninput="genService()"></div>
+          <div class="field-row">
+            <div class="field"><label>Price (if fixed)</label><input type="text" id="sv-price" placeholder="2500" oninput="genService()"></div>
+            <div class="field"><label>Currency</label><input type="text" id="sv-curr" placeholder="USD" oninput="genService()"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Rating (1-5)</label><input type="number" id="sv-rating" min="1" max="5" step="0.1" placeholder="4.9" oninput="genService()"></div>
+            <div class="field"><label>Review Count</label><input type="number" id="sv-rcount" placeholder="87" oninput="genService()"></div>
+          </div>
+        </div>`;
+      genService();
+    }
+  },
+
+  event: {
+    title: 'Event',
+    desc: 'Event schema enables your events to appear in Google\'s event carousel and AI event summaries. Works for webinars, conferences, workshops, meetups, and any other scheduled event.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">🗓 Event Schema</div>
+          <div class="form-sub">${SCHEMAS.event.desc}</div>
+          <div class="field"><label>Event Name *</label><input type="text" id="ev-name" placeholder="AI SEO Masterclass 2025" oninput="genEvent()"></div>
+          <div class="field"><label>Event Description</label><textarea id="ev-desc" rows="2" placeholder="A live 3-hour masterclass covering everything you need to know about AI SEO in 2025." oninput="genEvent()"></textarea></div>
+          <div class="field"><label>Event URL</label><input type="url" id="ev-url" placeholder="https://example.com/events/ai-seo-masterclass" oninput="genEvent()"></div>
+          <div class="field"><label>Event Image URL</label><input type="url" id="ev-img" placeholder="https://example.com/events/masterclass-banner.jpg" oninput="genEvent()"></div>
+          <div class="field-row">
+            <div class="field"><label>Start Date & Time</label><input type="text" id="ev-start" placeholder="2025-06-15T09:00:00-05:00" oninput="genEvent()"></div>
+            <div class="field"><label>End Date & Time</label><input type="text" id="ev-end" placeholder="2025-06-15T12:00:00-05:00" oninput="genEvent()"></div>
+          </div>
+          <div class="field"><label>Event Mode</label>
+            <select id="ev-mode" onchange="genEvent()">
+              <option value="OnlineEventAttendanceMode">Online (Virtual)</option>
+              <option value="OfflineEventAttendanceMode">In-Person</option>
+              <option value="MixedEventAttendanceMode">Hybrid (In-Person + Online)</option>
+            </select>
+          </div>
+          <div class="field" id="ev-location-field">
+            <label>Location Name / Platform</label>
+            <input type="text" id="ev-loc" placeholder="Zoom / Chicago Convention Center" oninput="genEvent()">
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Ticket Price</label><input type="text" id="ev-price" placeholder="97" oninput="genEvent()"></div>
+            <div class="field"><label>Currency</label><input type="text" id="ev-curr" placeholder="USD" oninput="genEvent()"></div>
+          </div>
+          <div class="field"><label>Organizer Name</label><input type="text" id="ev-org" placeholder="Acme Marketing" oninput="genEvent()"></div>
+          <div class="field"><label>Organizer URL</label><input type="url" id="ev-org-url" placeholder="https://example.com" oninput="genEvent()"></div>
+        </div>`;
+      genEvent();
+    }
+  },
+
+  review: {
+    title: 'Review',
+    desc: 'Review schema marks up individual reviews or aggregate ratings. When combined with Product, Organization, or Service schema, it enables star ratings in search results — a powerful click-through rate booster.',
+    render(container, generate) {
+      container.innerHTML = `
+        <div class="form-section">
+          <div class="form-title">⭐ Review / AggregateRating Schema</div>
+          <div class="form-sub">${SCHEMAS.review.desc}</div>
+          <div class="field"><label>Item Being Reviewed *</label><input type="text" id="rv-item" placeholder="AI SEO Launchpad" oninput="genReview()"></div>
+          <div class="field"><label>Item Type</label>
+            <select id="rv-type" onchange="genReview()">
+              <option value="Product">Product</option>
+              <option value="Service">Service</option>
+              <option value="Organization">Organization</option>
+              <option value="Book">Book</option>
+              <option value="Course">Course</option>
+              <option value="SoftwareApplication">SoftwareApplication</option>
+            </select>
+          </div>
+          <div class="field"><label>Item URL</label><input type="url" id="rv-url" placeholder="https://example.com/product" oninput="genReview()"></div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Aggregate Rating</div>
+          <div class="field-row">
+            <div class="field"><label>Average Rating (1-5)</label><input type="number" id="rv-rating" min="1" max="5" step="0.1" placeholder="4.9" oninput="genReview()"></div>
+            <div class="field"><label>Total Review Count</label><input type="number" id="rv-count" placeholder="412" oninput="genReview()"></div>
+          </div>
+          <hr class="divider">
+          <div class="form-title" style="font-size:0.9rem;margin-bottom:0.75rem;">Featured Review (optional)</div>
+          <div class="field"><label>Reviewer Name</label><input type="text" id="rv-rname" placeholder="Michael Torres" oninput="genReview()"></div>
+          <div class="field"><label>Review Body</label><textarea id="rv-body" rows="3" placeholder="This toolkit completely transformed how we approach SEO for our clients. The schema generator alone saved us hours every week..." oninput="genReview()"></textarea></div>
+          <div class="field-row">
+            <div class="field"><label>Review Rating</label><input type="number" id="rv-rrating" min="1" max="5" placeholder="5" oninput="genReview()"></div>
+            <div class="field"><label>Review Date</label><input type="text" id="rv-date" placeholder="2025-02-14" oninput="genReview()"></div>
+          </div>
+        </div>`;
+      genReview();
+    }
+  }
+};
+
+// ── Generator functions ─────────────────────────────────────────────
+const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+const gArr = id => { const v = g(id); return v ? v.split(',').map(s=>s.trim()).filter(Boolean) : []; };
+
+function wrap(obj) {
+  return `<script type="application/ld+json">\n${JSON.stringify(obj, null, 2)}\n<\/script>`;
+}
+
+function setOutput(schema) {
+  document.getElementById('schemaOutput').textContent = wrap(schema);
+}
+
+window.genOrg = function() {
+  const sameAs = [g('org-li'),g('org-tw'),g('org-fb'),g('org-yt'),g('org-cb'),g('org-wp'),g('org-ig')].filter(Boolean);
+  const obj = { "@context":"https://schema.org","@type":"Organization","name":g('org-name')||"Your Organization","url":g('org-url')||"https://example.com" };
+  if(g('org-logo')) obj.logo = { "@type":"ImageObject","url":g('org-logo') };
+  if(g('org-desc')) obj.description = g('org-desc');
+  if(g('org-year')) obj.foundingDate = g('org-year');
+  if(g('org-email')) obj.email = g('org-email');
+  if(g('org-phone')) obj.telephone = g('org-phone');
+  if(sameAs.length) obj.sameAs = sameAs;
+  setOutput(obj);
+};
+
+window.genPerson = function() {
+  const name = [g('p-first'), g('p-last')].filter(Boolean).join(' ') || 'Your Name';
+  const sameAs = [g('p-li'), g('p-tw'), g('p-web')].filter(Boolean);
+  const obj = { "@context":"https://schema.org","@type":"Person","name":name };
+  if(g('p-job')) obj.jobTitle = g('p-job');
+  if(g('p-url')) obj.url = g('p-url');
+  if(g('p-img')) obj.image = g('p-img');
+  if(g('p-desc')) obj.description = g('p-desc');
+  if(g('p-employer')) obj.worksFor = { "@type":"Organization","name":g('p-employer'), ...(g('p-employer-url') && { url: g('p-employer-url') }) };
+  if(sameAs.length) obj.sameAs = sameAs;
+  setOutput(obj);
+};
+
+window.genLB = function() {
+  const obj = { "@context":"https://schema.org","@type":g('lb-type')||"LocalBusiness","name":g('lb-name')||"Your Business" };
+  if(g('lb-url')) obj.url = g('lb-url');
+  if(g('lb-desc')) obj.description = g('lb-desc');
+  if(g('lb-street')) obj.address = { "@type":"PostalAddress","streetAddress":g('lb-street'),"addressLocality":g('lb-city'),"addressRegion":g('lb-state'),"postalCode":g('lb-zip'),"addressCountry":g('lb-country')||'US' };
+  if(g('lb-phone')) obj.telephone = g('lb-phone');
+  if(g('lb-email')) obj.email = g('lb-email');
+  if(g('lb-lat') && g('lb-lng')) obj.geo = { "@type":"GeoCoordinates","latitude":parseFloat(g('lb-lat')),"longitude":parseFloat(g('lb-lng')) };
+  if(g('lb-price')) obj.priceRange = g('lb-price');
+  if(g('lb-hours')) obj.openingHours = g('lb-hours').split(',').map(s=>s.trim());
+  if(g('lb-rating') && g('lb-rcount')) obj.aggregateRating = { "@type":"AggregateRating","ratingValue":g('lb-rating'),"reviewCount":g('lb-rcount') };
+  setOutput(obj);
+};
+
+window.genArticle = function() {
+  const obj = { "@context":"https://schema.org","@type":g('art-type')||"Article","headline":g('art-hl')||"Article Headline" };
+  if(g('art-url')) obj.url = g('art-url');
+  if(g('art-img')) obj.image = g('art-img');
+  if(g('art-desc')) obj.description = g('art-desc');
+  if(g('art-pub')) obj.datePublished = g('art-pub');
+  if(g('art-mod')) obj.dateModified = g('art-mod');
+  if(g('art-auth')) obj.author = { "@type":"Person","name":g('art-auth'), ...(g('art-auth-url') && { url: g('art-auth-url') }) };
+  if(g('art-pub-name')) obj.publisher = { "@type":"Organization","name":g('art-pub-name'), ...(g('art-pub-logo') && { logo: { "@type":"ImageObject","url":g('art-pub-logo') } }) };
+  setOutput(obj);
+};
+
+window.genHowTo = function() {
+  const obj = { "@context":"https://schema.org","@type":"HowTo","name":g('ht-name')||"How To..." };
+  if(g('ht-desc')) obj.description = g('ht-desc');
+  if(g('ht-time')) obj.totalTime = g('ht-time');
+  const tools = gArr('ht-tools');
+  if(tools.length) obj.tool = tools.map(t => ({ "@type":"HowToTool","name":t }));
+  const names = [...document.querySelectorAll('.hts-name')].map(e=>e.value.trim());
+  const texts = [...document.querySelectorAll('.hts-text')].map(e=>e.value.trim());
+  obj.step = names.map((n,i) => ({ "@type":"HowToStep","name":n||`Step ${i+1}`,"text":texts[i]||`Step ${i+1} instructions.` }));
+  if(g('ht-cost')) obj.estimatedCost = { "@type":"MonetaryAmount","currency":"USD","value":g('ht-cost').replace(/[^0-9.]/g,'') };
+  setOutput(obj);
+};
+
+window.genProduct = function() {
+  const obj = { "@context":"https://schema.org","@type":"Product","name":g('pr-name')||"Product Name" };
+  if(g('pr-desc')) obj.description = g('pr-desc');
+  if(g('pr-img')) obj.image = g('pr-img');
+  if(g('pr-brand')) obj.brand = { "@type":"Brand","name":g('pr-brand') };
+  if(g('pr-sku')) obj.sku = g('pr-sku');
+  if(g('pr-price')) obj.offers = { "@type":"Offer","price":g('pr-price'),"priceCurrency":g('pr-currency')||"USD","availability":g('pr-avail')||"https://schema.org/InStock", ...(g('pr-url') && { url: g('pr-url') }) };
+  if(g('pr-rating') && g('pr-rcount')) obj.aggregateRating = { "@type":"AggregateRating","ratingValue":g('pr-rating'),"reviewCount":g('pr-rcount') };
+  setOutput(obj);
+};
+
+window.genWebSite = function() {
+  const obj = { "@context":"https://schema.org","@type":"WebSite","name":g('ws-name')||"Site Name","url":g('ws-url')||"https://example.com" };
+  const alt = gArr('ws-alt');
+  if(alt.length) obj.alternateName = alt;
+  const searchCb = document.getElementById('ws-search');
+  if(searchCb && searchCb.checked && g('ws-search-url')) {
+    obj.potentialAction = { "@type":"SearchAction","target":{ "@type":"EntryPoint","urlTemplate":g('ws-search-url') },"query-input":"required name=search_term_string" };
+  }
+  setOutput(obj);
+};
+
+window.genBreadcrumb = function() {
+  const names = [...document.querySelectorAll('.crumb-name')].map(e=>e.value.trim());
+  const urls  = [...document.querySelectorAll('.crumb-url')].map(e=>e.value.trim());
+  const obj = { "@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":
+    names.map((n,i) => ({ "@type":"ListItem","position":i+1,"name":n||`Page ${i+1}`,"item":urls[i]||"https://example.com" }))
+  };
+  setOutput(obj);
+};
+
+window.genService = function() {
+  const obj = { "@context":"https://schema.org","@type":"Service","name":g('sv-name')||"Service Name" };
+  if(g('sv-type')) obj.serviceType = g('sv-type');
+  if(g('sv-desc')) obj.description = g('sv-desc');
+  if(g('sv-url')) obj.url = g('sv-url');
+  if(g('sv-prov')) obj.provider = { "@type":"Organization","name":g('sv-prov'), ...(g('sv-prov-url') && {url:g('sv-prov-url')}) };
+  const areas = gArr('sv-area');
+  if(areas.length) obj.areaServed = areas;
+  if(g('sv-price')) obj.offers = { "@type":"Offer","price":g('sv-price'),"priceCurrency":g('sv-curr')||"USD" };
+  if(g('sv-rating') && g('sv-rcount')) obj.aggregateRating = { "@type":"AggregateRating","ratingValue":g('sv-rating'),"reviewCount":g('sv-rcount') };
+  setOutput(obj);
+};
+
+window.genEvent = function() {
+  const modeMap = { OnlineEventAttendanceMode:"https://schema.org/OnlineEventAttendanceMode", OfflineEventAttendanceMode:"https://schema.org/OfflineEventAttendanceMode", MixedEventAttendanceMode:"https://schema.org/MixedEventAttendanceMode" };
+  const obj = { "@context":"https://schema.org","@type":"Event","name":g('ev-name')||"Event Name" };
+  if(g('ev-desc')) obj.description = g('ev-desc');
+  if(g('ev-url')) obj.url = g('ev-url');
+  if(g('ev-img')) obj.image = g('ev-img');
+  if(g('ev-start')) obj.startDate = g('ev-start');
+  if(g('ev-end')) obj.endDate = g('ev-end');
+  const mode = g('ev-mode') || 'OnlineEventAttendanceMode';
+  obj.eventAttendanceMode = modeMap[mode];
+  obj.eventStatus = "https://schema.org/EventScheduled";
+  if(g('ev-loc')) obj.location = mode === 'OnlineEventAttendanceMode'
+    ? { "@type":"VirtualLocation","url":g('ev-url')||"https://example.com" }
+    : { "@type":"Place","name":g('ev-loc') };
+  if(g('ev-price')) obj.offers = { "@type":"Offer","price":g('ev-price'),"priceCurrency":g('ev-curr')||"USD","availability":"https://schema.org/InStock" };
+  if(g('ev-org')) obj.organizer = { "@type":"Organization","name":g('ev-org'), ...(g('ev-org-url') && {url:g('ev-org-url')}) };
+  setOutput(obj);
+};
+
+window.genReview = function() {
+  const obj = { "@context":"https://schema.org","@type":g('rv-type')||"Product","name":g('rv-item')||"Item Name" };
+  if(g('rv-url')) obj.url = g('rv-url');
+  if(g('rv-rating') && g('rv-count')) obj.aggregateRating = { "@type":"AggregateRating","ratingValue":g('rv-rating'),"bestRating":"5","worstRating":"1","reviewCount":g('rv-count') };
+  if(g('rv-rname') || g('rv-body')) obj.review = { "@type":"Review","author":{ "@type":"Person","name":g('rv-rname')||"Reviewer" },"reviewBody":g('rv-body'),"reviewRating":{ "@type":"Rating","ratingValue":g('rv-rrating')||"5","bestRating":"5" },...(g('rv-date') && {datePublished:g('rv-date')}) };
+  setOutput(obj);
+};
+
+// ── Copy / Download ────────────────────────────────────────────────
+window.copySchema = function(btn) {
+  const code = document.getElementById('schemaOutput').textContent;
+  copyText(code, btn);
+};
+window.downloadSchema = function() {
+  const code = document.getElementById('schemaOutput').textContent;
+  const type = document.querySelector('.schema-btn.active').dataset.type;
+  downloadFile(code, `schema-${type}.html`, 'text/html');
+};
+
+// ── Schema switcher ────────────────────────────────────────────────
+window.switchSchema = function(type, btn) {
+  document.querySelectorAll('.schema-btn').forEach(b => b.classList.toggle('active', b === btn));
+  const formPanel = document.getElementById('formPanel');
+  const def = SCHEMAS[type];
+  if (def) def.render(formPanel, setOutput);
+};
+
+// ── Init: load FAQ by default ──────────────────────────────────────
+SCHEMAS.faq.render(document.getElementById('formPanel'), setOutput);
+</script>
+</body>
+</html>

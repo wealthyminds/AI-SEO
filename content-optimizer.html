@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Content Optimizer — AI SEO Launchpad</title>
+<meta name="description" content="Paste your page content and get an instant AI readiness score with specific recommendations for Google AI Overview and LLM citation optimization.">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.opt-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .opt-layout { grid-template-columns: 1fr; }
+}
+.input-panel {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+.input-panel-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-4);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.results-panel {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: sticky; top: calc(var(--nav-h) + 1rem);
+}
+.results-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-4);
+  font-size: 0.88rem; font-weight: 600;
+}
+.score-section {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.score-big {
+  font-size: 4rem; font-weight: 800; line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.score-grade { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+.dim-list { padding: 0 1.25rem 1rem; }
+.dim-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border);
+  gap: 0.75rem;
+}
+.dim-row:last-child { border-bottom: none; }
+.dim-name { font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
+.dim-bar-wrap { flex: 1; height: 6px; background: var(--bg-4); border-radius: 3px; overflow: hidden; }
+.dim-bar { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.dim-score { font-size: 0.8rem; font-weight: 700; flex-shrink: 0; min-width: 30px; text-align: right; }
+
+.recs-section { padding: 1rem 1.25rem; }
+.rec-item {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.84rem;
+}
+.rec-item:last-child { border-bottom: none; }
+.rec-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.rec-text { color: var(--text-2); line-height: 1.5; }
+.rec-text strong { color: var(--text); }
+
+/* Templates */
+.template-card {
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.template-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.template-head:hover { background: rgba(255,255,255,0.03); }
+.template-head-title {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: 0.9rem; font-weight: 600;
+}
+.template-body {
+  padding: 0 1.1rem 1.1rem;
+  display: none;
+}
+.template-card.open .template-body { display: block; }
+.template-card.open .template-chevron { transform: rotate(180deg); }
+.template-chevron { transition: transform 0.2s; font-size: 0.75rem; color: var(--text-4); }
+
+.url-input-row {
+  display: flex; gap: 0.75rem; margin-bottom: 1rem;
+}
+.url-input-row input { flex: 1; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚀</div>
+    AI SEO Launchpad
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><span class="icon">🏠</span> Dashboard</a></li>
+    <li><a href="checklist.html"><span class="icon">✅</span> Checklist</a></li>
+    <li><a href="schema-generator.html"><span class="icon">🧩</span> Schema Generator</a></li>
+    <li><a href="content-optimizer.html" class="active"><span class="icon">📊</span> Content Optimizer</a></li>
+    <li><a href="llms-txt.html"><span class="icon">🤖</span> llms.txt Builder</a></li>
+  </ul>
+</nav>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="eyebrow">📊 Content Analysis</div>
+    <h1 class="section-title">AI Content Optimizer</h1>
+    <p class="section-sub">Paste your page content below for an instant AI-readiness score. See exactly what's missing and what to fix to maximize your chances of appearing in Google AI Overview and being cited by LLMs.</p>
+  </div>
+</section>
+
+<div class="container" style="padding-bottom:5rem;">
+  <!-- Tabs -->
+  <div class="tabs-container">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(0,this)">📊 Content Analyzer</button>
+      <button class="tab-btn" onclick="switchTab(1,this)">✍️ Featured Snippet Optimizer</button>
+      <button class="tab-btn" onclick="switchTab(2,this)">❓ FAQ Generator</button>
+      <button class="tab-btn" onclick="switchTab(3,this)">📋 Content Templates</button>
+    </div>
+
+    <!-- Tab 0: Content Analyzer -->
+    <div class="tab-panel active">
+      <div class="opt-layout">
+        <div>
+          <div class="input-panel">
+            <div class="input-panel-header">
+              <span style="font-size:0.88rem;font-weight:600;">Paste your page content</span>
+              <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-sm btn-ghost" onclick="loadSample()">Load Sample</button>
+                <button class="btn btn-sm btn-ghost" onclick="document.getElementById('contentInput').value='';analyzeContent()">Clear</button>
+              </div>
+            </div>
+            <textarea id="contentInput" style="background:transparent;border:none;border-radius:0;padding:1.25rem;min-height:400px;resize:vertical;font-family:var(--font);font-size:0.88rem;line-height:1.7;color:var(--text);" placeholder="Paste your full page content here — headings, body text, FAQ sections, everything.
+
+The more complete the content, the more accurate the analysis.
+
+Pro tip: also paste your page title on the first line to get title-specific feedback." oninput="analyzeContent()"></textarea>
+          </div>
+          <div class="mt-2 flex-between">
+            <span id="wordCount" class="text-sm text-muted">0 words</span>
+            <button class="btn btn-primary" onclick="analyzeContent()">Analyze Content</button>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="results-panel" id="resultsPanel">
+          <div class="results-header">AI Readiness Score</div>
+          <div class="score-section">
+            <div id="scorePlaceholder" style="padding:2rem;color:var(--text-4);font-size:0.9rem;">
+              Paste content on the left to see your score →
+            </div>
+            <div id="scoreDisplay" style="display:none;">
+              <div class="score-big grad-text" id="scoreNum">0</div>
+              <div class="score-grade" id="scoreGrade"></div>
+              <div class="text-sm text-muted" id="scoreHint"></div>
+            </div>
+          </div>
+          <div class="dim-list" id="dimList"></div>
+          <div class="recs-section" id="recsSection"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 1: Featured Snippet Optimizer -->
+    <div class="tab-panel">
+      <div style="max-width:820px;">
+        <div class="alert alert-info">
+          <div class="alert-icon">💡</div>
+          <div>Featured snippets are the primary source for Google AI Overview content. Optimize your answers for the exact format Google prefers: <strong>paragraph</strong>, <strong>numbered list</strong>, or <strong>table</strong>. Write 40-60 words for paragraphs.</div>
+        </div>
+
+        <div class="card mb-3">
+          <div class="form-title mb-1">Target Query</div>
+          <div class="field"><label>What question does this content answer?</label><input type="text" id="fs-query" placeholder="How long does SEO take to work?" oninput="updateSnippet()"></div>
+          <div class="field"><label>Snippet Type</label>
+            <select id="fs-type" onchange="updateSnippet()">
+              <option value="paragraph">Paragraph (best for definitions, explanations)</option>
+              <option value="list">Numbered List (best for steps, processes)</option>
+              <option value="table">Table (best for comparisons, data)</option>
+              <option value="accordion">Accordion/FAQ (best for Q&A content)</option>
+            </select>
+          </div>
+          <div id="fs-inputs"></div>
+          <button class="btn btn-primary mt-2" onclick="updateSnippet()">Generate Optimized Snippet</button>
+        </div>
+
+        <div class="card" id="snippetOutput" style="display:none;">
+          <div class="flex-between mb-2">
+            <span class="bold">Optimized Content</span>
+            <button class="btn btn-sm btn-outline copy-btn" onclick="copyText(document.getElementById('snippetText').textContent, this)">Copy</button>
+          </div>
+          <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div id="snippetFeedback"></div>
+          </div>
+          <pre id="snippetText" style="white-space:pre-wrap;font-size:0.88rem;font-family:var(--font);color:var(--text);background:var(--bg-4);border-color:var(--border)"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: FAQ Generator -->
+    <div class="tab-panel">
+      <div style="max-width:820px;">
+        <div class="alert alert-info">
+          <div class="alert-icon">💡</div>
+          <div>FAQ sections are the #1 driver of Google AI Overview inclusion. Enter your topic and we'll generate a comprehensive FAQ structure you can use as a starting point — then customize the answers with your expertise.</div>
+        </div>
+
+        <div class="card mb-3">
+          <div class="field"><label>Topic / Page Subject</label><input type="text" id="faq-topic" placeholder="AI SEO for small businesses" oninput=""></div>
+          <div class="field"><label>Your Business / Product (optional)</label><input type="text" id="faq-business" placeholder="ABC Marketing Agency" oninput=""></div>
+          <div class="field"><label>Number of Questions</label>
+            <select id="faq-count">
+              <option value="5">5 questions</option>
+              <option value="8" selected>8 questions</option>
+              <option value="10">10 questions</option>
+              <option value="15">15 questions</option>
+            </select>
+          </div>
+          <div class="field"><label>FAQ Intent Focus</label>
+            <select id="faq-intent">
+              <option value="mixed">Mixed (What, How, Why, When, Who, How much)</option>
+              <option value="informational">Informational (What is, How does, Why)</option>
+              <option value="commercial">Commercial (Best, vs, pricing, alternatives)</option>
+              <option value="local">Local (near me, in [city], local)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="generateFAQ()">Generate FAQ Structure</button>
+        </div>
+
+        <div id="faqOutput" style="display:none;">
+          <div class="flex-between mb-2">
+            <span class="bold">Generated FAQ Structure</span>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn-sm btn-outline copy-btn" onclick="copyFAQText(this)">Copy Text</button>
+              <button class="btn btn-sm btn-outline" onclick="copyFAQSchema(this)">Copy JSON-LD</button>
+            </div>
+          </div>
+          <div id="faqItems"></div>
+          <div class="alert alert-warn mt-2">
+            <div class="alert-icon">✏️</div>
+            <div>These are question templates. <strong>Write your own expert answers</strong> — 2-4 sentences each, drawing on your real experience. Generic answers won't drive AI citations.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Content Templates -->
+    <div class="tab-panel">
+      <div style="max-width:820px;">
+        <p class="text-muted mb-3">Click any template to expand it. Copy and customize for your content. These formats are specifically optimized for AI Overview citations and LLM recommendations.</p>
+
+        <div id="templateList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>AI SEO Launchpad — <a href="index.html" style="color:var(--primary-light)">Back to Dashboard</a></p>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+<script>
+// ── Tab switcher ──────────────────────────────────────────────────
+let activeTab = 0;
+const tabPanels = document.querySelectorAll('.tab-panel');
+const tabBtns   = document.querySelectorAll('.tab-btn');
+window.switchTab = function(i, btn) {
+  tabPanels.forEach((p,j) => p.classList.toggle('active', j === i));
+  tabBtns.forEach((b,j) => b.classList.toggle('active', j === i));
+  activeTab = i;
+  if (i === 3) renderTemplates();
+  if (i === 1) initSnippetInputs();
+};
+
+// ── Content Analyzer ─────────────────────────────────────────────
+const DIMENSIONS = [
+  { key: 'directAnswer', label: 'Direct Answer Para', color: '#7c3aed', max: 15 },
+  { key: 'wordCount',    label: 'Word Count',          color: '#06b6d4', max: 12 },
+  { key: 'faq',          label: 'FAQ / Q&A',           color: '#10b981', max: 15 },
+  { key: 'lists',        label: 'Lists & Steps',       color: '#f59e0b', max: 12 },
+  { key: 'stats',        label: 'Statistics/Data',     color: '#ec4899', max: 10 },
+  { key: 'headings',     label: 'Heading Structure',   color: '#a78bfa', max: 10 },
+  { key: 'tables',       label: 'Tables/Comparisons',  color: '#34d399', max: 8 },
+  { key: 'freshness',    label: 'Freshness Signals',   color: '#fb923c', max: 8 },
+  { key: 'eeat',         label: 'E-E-A-T Signals',     color: '#60a5fa', max: 10 },
+];
+
+function analyzeContent() {
+  const raw = document.getElementById('contentInput').value;
+  const text = raw.trim();
+  const words = text.split(/\s+/).filter(Boolean);
+  document.getElementById('wordCount').textContent = `${words.length.toLocaleString()} words`;
+
+  if (text.length < 50) {
+    document.getElementById('scorePlaceholder').style.display = 'block';
+    document.getElementById('scoreDisplay').style.display = 'none';
+    document.getElementById('dimList').innerHTML = '';
+    document.getElementById('recsSection').innerHTML = '';
+    return;
+  }
+
+  const lower = text.toLowerCase();
+  const scores = {};
+  const recs = [];
+
+  // Direct answer paragraph
+  const firstPara = text.split(/\n+/)[0];
+  const firstParaWords = firstPara.split(/\s+/).filter(Boolean).length;
+  if (firstParaWords >= 35 && firstParaWords <= 80) { scores.directAnswer = 15; }
+  else if (firstParaWords >= 20) { scores.directAnswer = 8; recs.push({ icon: '✏️', text: '<strong>Rewrite your opening paragraph</strong> as a 40-60 word direct answer to the main query this page targets. This is the most impactful single change for AI Overview inclusion.' }); }
+  else { scores.directAnswer = 2; recs.push({ icon: '🔴', text: '<strong>Add a direct answer paragraph</strong> as the very first paragraph (40-60 words). Directly answer the main question the page is about, no fluff or preamble.' }); }
+
+  // Word count
+  const wc = words.length;
+  if (wc >= 1500 && wc <= 4000) { scores.wordCount = 12; }
+  else if (wc >= 800)  { scores.wordCount = 8; recs.push({ icon: '📝', text: `<strong>Expand your content to 1,500-3,000 words.</strong> Current: ${wc.toLocaleString()} words. Comprehensive content ranks better and is cited more often by AI systems.` }); }
+  else if (wc >= 300)  { scores.wordCount = 4; recs.push({ icon: '🔴', text: `<strong>This content is too short (${wc} words).</strong> AI systems favor comprehensive, authoritative content. Expand to at least 1,000 words with supporting detail.` }); }
+  else { scores.wordCount = 1; recs.push({ icon: '🔴', text: '<strong>Content is too thin.</strong> Add substantial body text, examples, data, and FAQ sections.' }); }
+
+  // FAQ / Q&A
+  const qCount = (text.match(/\?/g) || []).length;
+  const hasFaqSection = /faq|frequently asked|common questions|people also ask/i.test(text);
+  if (hasFaqSection && qCount >= 5) { scores.faq = 15; }
+  else if (hasFaqSection || qCount >= 3) { scores.faq = 8; recs.push({ icon: '❓', text: '<strong>Expand your FAQ section.</strong> Aim for 8-10 Q&A pairs. Use the FAQ Generator tab to create a comprehensive question set.' }); }
+  else { scores.faq = 0; recs.push({ icon: '🔴', text: '<strong>Add an FAQ section with at least 8 Q&A pairs.</strong> FAQ content is the #1 source for Google AI Overview citations. This is non-negotiable for AI visibility.' }); }
+
+  // Lists and steps
+  const bulletLines = (text.match(/^[\s]*[-•*]\s/gm) || []).length;
+  const numberedLines = (text.match(/^[\s]*\d+[.)]\s/gm) || []).length;
+  const totalLists = bulletLines + numberedLines;
+  if (totalLists >= 10) { scores.lists = 12; }
+  else if (totalLists >= 4) { scores.lists = 7; recs.push({ icon: '📋', text: '<strong>Add more structured lists and numbered steps.</strong> Convert any process, sequence, or collection of items into a numbered or bulleted list. AI loves scannable structure.' }); }
+  else { scores.lists = 2; recs.push({ icon: '🟡', text: '<strong>Content lacks structured lists.</strong> Break up prose with bullet points, numbered steps, and organized lists. These formats are heavily favored in AI Overviews.' }); }
+
+  // Statistics/data
+  const hasStats = /\d+%|\$\d+|study|research|survey|according to|data shows|report|statistics/i.test(text);
+  const statCount = (text.match(/\d+%|\$[\d,]+/g) || []).length;
+  if (hasStats && statCount >= 3) { scores.stats = 10; }
+  else if (hasStats) { scores.stats = 5; recs.push({ icon: '📊', text: '<strong>Add more statistics, data points, and citations.</strong> Quantified claims (percentages, dollar amounts, study results) are prime AI citation material.' }); }
+  else { scores.stats = 0; recs.push({ icon: '🟡', text: '<strong>No statistics detected.</strong> Add data-backed claims: industry statistics, research citations, original survey data, or case study results. AI cites data-rich content preferentially.' }); }
+
+  // Heading structure
+  const h2Count = (text.match(/^#{2}\s|^<h2/gmi) || []).length;
+  const h3Count = (text.match(/^#{3}\s|^<h3/gmi) || []).length;
+  if (h2Count >= 4 && h3Count >= 2) { scores.headings = 10; }
+  else if (h2Count >= 2) { scores.headings = 6; recs.push({ icon: '🗂', text: '<strong>Improve heading structure.</strong> Use H2 headings for major sections and H3 for sub-topics. Each H2 should answer a specific user question.' }); }
+  else { scores.headings = 2; recs.push({ icon: '🟡', text: '<strong>Add clear H2/H3 heading hierarchy.</strong> Structure content with descriptive headings that act as standalone searchable questions.' }); }
+
+  // Tables/comparisons
+  const hasTables = /\|.+\||\bvs\.?\b|\bcompare|comparison|pros and cons|pros:\s|cons:\s/i.test(text);
+  scores.tables = hasTables ? 8 : 0;
+  if (!hasTables) recs.push({ icon: '📊', text: '<strong>Add comparison tables or pros/cons lists.</strong> Tabular content (X vs Y, pros/cons, feature comparisons) is heavily featured in AI Overviews for commercial and research queries.' });
+
+  // Freshness signals
+  const hasDate = /202[0-9]|january|february|march|april|may|june|july|august|september|october|november|december/i.test(text);
+  const hasUpdated = /updated|last updated|published|revised/i.test(text);
+  scores.freshness = (hasDate ? 4 : 0) + (hasUpdated ? 4 : 0);
+  if (!hasDate) recs.push({ icon: '📅', text: '<strong>Add date signals.</strong> Include publication date and "last updated" information. AI systems use content freshness as a quality signal for time-sensitive topics.' });
+
+  // E-E-A-T signals
+  const hasAuthor = /author|written by|by [A-Z][a-z]+/i.test(text);
+  const hasExpertise = /year[s]? of experience|certified|expert|specialist|founded|clients|case study/i.test(text);
+  const hasSource = /according to|source:|citation|references|via/i.test(text);
+  const eeatScore = (hasAuthor ? 4 : 0) + (hasExpertise ? 3 : 0) + (hasSource ? 3 : 0);
+  scores.eeat = eeatScore;
+  if (!hasAuthor) recs.push({ icon: '👤', text: '<strong>Add author information.</strong> Byline + author bio with credentials is a critical E-E-A-T signal that AI systems use to determine content authority.' });
+  if (!hasExpertise) recs.push({ icon: '🏆', text: '<strong>Add expertise signals.</strong> Mention years of experience, credentials, client results, or industry certifications to boost E-E-A-T.' });
+
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+  const maxTotal = DIMENSIONS.reduce((a, d) => a + d.max, 0);
+  const pct = Math.round((total / maxTotal) * 100);
+
+  const gradeMap = [
+    [85, '🏆 Excellent — AI-Ready', 'var(--green)', 'Your content is well-optimized for AI visibility. Focus on citation building next.'],
+    [70, '✅ Good — Almost There', 'var(--cyan)', 'Solid foundation. Implement the recommendations below to reach AI-ready status.'],
+    [50, '⚠️ Fair — Needs Work', 'var(--amber)', 'Several important elements are missing. Follow the recommendations below.'],
+    [0, '❌ Poor — Major Gaps', 'var(--red)', 'Significant optimization needed. Start with the high-priority recommendations below.'],
+  ];
+  const [, grade, color, hint] = gradeMap.find(([t]) => pct >= t);
+
+  document.getElementById('scorePlaceholder').style.display = 'none';
+  document.getElementById('scoreDisplay').style.display = 'block';
+  document.getElementById('scoreNum').textContent = pct;
+  document.getElementById('scoreNum').style.color = color;
+  document.getElementById('scoreGrade').textContent = grade;
+  document.getElementById('scoreGrade').style.color = color;
+  document.getElementById('scoreHint').textContent = hint;
+
+  const dimHtml = DIMENSIONS.map(d => {
+    const s = scores[d.key] || 0;
+    const p = Math.round((s / d.max) * 100);
+    return `<div class="dim-row">
+      <span class="dim-name">${d.label}</span>
+      <div class="dim-bar-wrap"><div class="dim-bar" style="width:${p}%;background:${d.color}"></div></div>
+      <span class="dim-score" style="color:${d.color}">${s}/${d.max}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('dimList').innerHTML = dimHtml;
+
+  const recHtml = recs.length
+    ? `<div style="font-size:0.85rem;font-weight:700;color:var(--text-3);margin-bottom:0.75rem;padding-top:0.25rem;">
+         RECOMMENDATIONS (${recs.length})
+       </div>` + recs.map(r => `<div class="rec-item"><span class="rec-icon">${r.icon}</span><span class="rec-text">${r.text}</span></div>`).join('')
+    : `<div style="padding:1rem;text-align:center;color:var(--green);">🎉 Content looks great! Now focus on citation building.</div>`;
+  document.getElementById('recsSection').innerHTML = recHtml;
+}
+
+function loadSample() {
+  document.getElementById('contentInput').value = `What Is AI SEO? The Complete Guide for 2025
+
+AI SEO is the practice of optimizing your website and content to be found, understood, and recommended by artificial intelligence systems — including Google's AI Overview, ChatGPT, Claude, Perplexity, and other large language models (LLMs).
+
+## Why AI SEO Matters in 2025
+
+Traditional SEO focused on ranking in the "10 blue links" of Google's organic results. But search behavior has fundamentally changed. According to a 2024 BrightEdge study, 84% of searches now trigger AI-generated content in results. If you're not optimized for AI, you're invisible to a growing segment of your audience.
+
+Key statistics:
+- Google AI Overviews now appear on 15% of all searches (and rising)
+- ChatGPT processes over 100 million queries per day
+- 45% of users trust AI-generated answers over traditional search results
+
+## How AI SEO Differs from Traditional SEO
+
+Traditional SEO focuses on keywords, backlinks, and technical factors. AI SEO is about entity authority, content structure, citation-worthiness, and factual accuracy.
+
+| Traditional SEO | AI SEO |
+|---|---|
+| Keyword density | Entity recognition |
+| Backlinks | Citation worthiness |
+| Page rank | E-E-A-T signals |
+| Meta descriptions | Direct answer paragraphs |
+
+## How to Optimize for Google AI Overview
+
+1. Write a direct answer paragraph (40-60 words) at the top of each page
+2. Add FAQ sections with at least 8 Q&A pairs
+3. Include statistics with source citations
+4. Structure content with clear H2/H3 headings
+5. Add FAQ Schema markup via JSON-LD
+
+## Frequently Asked Questions
+
+**What is the difference between SEO and AI SEO?**
+Traditional SEO optimizes for keyword rankings in organic search results. AI SEO optimizes for being cited and recommended by AI systems including Google AI Overview, ChatGPT, Claude, and Perplexity. The two disciplines overlap but require distinct strategies.
+
+**How long does AI SEO take to work?**
+Technical changes (schema markup, robots.txt) can show results within days. Content optimizations typically take 4-12 weeks to impact AI citation frequency. Entity building (Knowledge Panel, citations) can take 3-6 months.
+
+**Does schema markup really help with AI Overviews?**
+Yes. Google's own documentation confirms that structured data helps AI systems understand and cite your content. FAQ schema is especially effective for AI Overview inclusion.
+
+Written by Sarah Johnson, Senior SEO Strategist with 8 years of experience in AI-driven content strategy. Last updated: March 2025.`;
+  analyzeContent();
+}
+
+// ── Featured Snippet Optimizer ────────────────────────────────────
+function initSnippetInputs() {
+  updateSnippetInputs(document.getElementById('fs-type').value);
+}
+
+document.getElementById('fs-type').addEventListener('change', function() {
+  updateSnippetInputs(this.value);
+});
+
+function updateSnippetInputs(type) {
+  const c = document.getElementById('fs-inputs');
+  if (type === 'paragraph') {
+    c.innerHTML = `<div class="field"><label>Your Answer (aim for 40-60 words)</label><textarea id="fs-answer" rows="4" placeholder="Write a direct, factual answer to the query above. Start with the key point, then provide supporting context. Avoid filler phrases like 'Great question!' Start immediately with the answer." oninput="updateSnippet()"></textarea><div class="hint" id="fs-wordcount">0 words</div></div>`;
+    document.getElementById('fs-answer').addEventListener('input', function() {
+      const wc = this.value.trim().split(/\s+/).filter(Boolean).length;
+      const el = document.getElementById('fs-wordcount');
+      const color = (wc >= 40 && wc <= 65) ? 'var(--green)' : (wc > 65 ? 'var(--amber)' : 'var(--text-4)');
+      el.textContent = `${wc} words`;
+      el.style.color = color;
+    });
+  } else if (type === 'list') {
+    c.innerHTML = `<div class="field"><label>Intro sentence (1 line)</label><input type="text" id="fs-intro" placeholder="Here are the 7 steps to optimize for Google AI Overview:" oninput="updateSnippet()"></div><div class="field"><label>Numbered Steps (one per line)</label><textarea id="fs-steps" rows="8" placeholder="1. Write a direct answer paragraph (40-60 words)&#10;2. Add FAQ schema markup&#10;3. Allow AI bots in robots.txt&#10;4. Build entity presence&#10;5. Get cited in authority publications&#10;6. Create an llms.txt file&#10;7. Build topic cluster content" oninput="updateSnippet()"></textarea></div>`;
+  } else if (type === 'table') {
+    c.innerHTML = `<div class="field"><label>Table Description</label><input type="text" id="fs-tabledesc" placeholder="Traditional SEO vs AI SEO comparison" oninput="updateSnippet()"></div><div class="field"><label>Table Content (Markdown format)</label><textarea id="fs-table" rows="8" placeholder="| Feature | Traditional SEO | AI SEO |&#10;|---|---|---|&#10;| Focus | Keywords | Entities |&#10;| Signal | Backlinks | Citations |&#10;| Content | Long-tail keywords | Direct answers |&#10;| Schema | Optional | Essential |&#10;| Authority | Domain rating | E-E-A-T score |" oninput="updateSnippet()"></textarea></div>`;
+  } else if (type === 'accordion') {
+    c.innerHTML = `<div class="field"><label>Question</label><input type="text" id="fs-faqq" placeholder="What is AI SEO?" oninput="updateSnippet()"></div><div class="field"><label>Answer</label><textarea id="fs-faqa" rows="4" placeholder="AI SEO is the practice of optimizing content to be found and recommended by AI systems including Google AI Overview, ChatGPT, Claude, and Perplexity. It focuses on entity authority, structured content, and citation-worthiness rather than traditional keyword ranking." oninput="updateSnippet()"></textarea></div>`;
+  }
+}
+
+window.updateSnippet = function() {
+  const type   = document.getElementById('fs-type').value;
+  const query  = document.getElementById('fs-query').value.trim();
+  let output = '';
+  let feedback = '';
+
+  if (type === 'paragraph') {
+    const ans = document.getElementById('fs-answer') ? document.getElementById('fs-answer').value.trim() : '';
+    const wc  = ans.split(/\s+/).filter(Boolean).length;
+    output = ans || '(Type your answer above)';
+    feedback = wc >= 40 && wc <= 65
+      ? `✅ <strong>Perfect length (${wc} words).</strong> This is the ideal range for paragraph featured snippets. Google AI Overview strongly prefers 40-60 word direct answers.`
+      : wc > 65
+      ? `⚠️ <strong>Too long (${wc} words).</strong> Trim to 40-65 words for better featured snippet eligibility. Remove filler and focus on the core answer.`
+      : `🔴 <strong>Too short (${wc} words).</strong> Expand to at least 40 words while staying under 65. Add one supporting sentence.`;
+  } else if (type === 'list') {
+    const intro = document.getElementById('fs-intro') ? document.getElementById('fs-intro').value.trim() : '';
+    const steps = document.getElementById('fs-steps') ? document.getElementById('fs-steps').value.trim() : '';
+    output = (intro ? intro + '\n\n' : '') + steps;
+    const stepCount = steps.split('\n').filter(s => /^\d+[.)]\s/.test(s.trim())).length;
+    feedback = stepCount >= 5
+      ? `✅ <strong>Good list structure (${stepCount} steps).</strong> Numbered lists of 5-10 steps perform best in AI Overviews. Start each step with an action verb.`
+      : `🟡 <strong>Add more steps (currently ${stepCount}).</strong> Lists of 5-10 numbered steps are ideal. AI Overviews typically show 5-7 list items.`;
+  } else if (type === 'table') {
+    const desc  = document.getElementById('fs-tabledesc') ? document.getElementById('fs-tabledesc').value.trim() : '';
+    const table = document.getElementById('fs-table') ? document.getElementById('fs-table').value.trim() : '';
+    output = (desc ? desc + '\n\n' : '') + table;
+    feedback = `✅ <strong>Table content is great for comparison queries.</strong> Ensure your table has clear headers and 3-5 rows for best AI Overview inclusion. Add context sentences before/after the table.`;
+  } else if (type === 'accordion') {
+    const q = document.getElementById('fs-faqq') ? document.getElementById('fs-faqq').value.trim() : '';
+    const a = document.getElementById('fs-faqa') ? document.getElementById('fs-faqa').value.trim() : '';
+    output = `<details>\n  <summary>${q || 'Question here?'}</summary>\n  <p>${a || 'Answer here.'}</p>\n</details>`;
+    feedback = `✅ <strong>FAQ/Accordion format.</strong> Use this HTML with FAQ Schema markup for maximum AI Overview inclusion. Pair with our Schema Generator tool to create the matching JSON-LD.`;
+  }
+
+  document.getElementById('snippetOutput').style.display = 'block';
+  document.getElementById('snippetText').textContent = output;
+  document.getElementById('snippetFeedback').innerHTML = feedback;
+};
+
+// ── FAQ Generator ────────────────────────────────────────────────
+const FAQ_TEMPLATES = {
+  mixed: [
+    'What is {topic}?',
+    'How does {topic} work?',
+    'Why is {topic} important?',
+    'What are the benefits of {topic}?',
+    'How much does {topic} cost?',
+    'What are the best {topic} tools?',
+    'How long does {topic} take?',
+    'Is {topic} worth it for small businesses?',
+    'What is the difference between {topic} and traditional alternatives?',
+    'How do I get started with {topic}?',
+    'What are common {topic} mistakes to avoid?',
+    'Can {business} help with {topic}?',
+    'What results can I expect from {topic}?',
+    'How do I measure {topic} success?',
+    'What are the latest {topic} trends?',
+  ],
+  informational: [
+    'What is {topic}?',
+    'How does {topic} work?',
+    'Why does {topic} matter?',
+    'What are the main components of {topic}?',
+    'What is the history of {topic}?',
+    'How is {topic} different from similar concepts?',
+    'What are {topic} best practices?',
+    'What should beginners know about {topic}?',
+    'How often should you think about {topic}?',
+    'What are the biggest misconceptions about {topic}?',
+  ],
+  commercial: [
+    'What is the best {topic} solution?',
+    'How much does {topic} cost?',
+    'What are the best {topic} tools?',
+    'Is {topic} worth the investment?',
+    'What are the top {topic} alternatives?',
+    'What features should I look for in {topic}?',
+    'Which {topic} tool is best for small businesses?',
+    'How do {topic} providers compare?',
+    'What ROI can I expect from {topic}?',
+    'What are the pros and cons of {topic}?',
+  ],
+  local: [
+    'Where can I find {topic} near me?',
+    'What are the best {topic} providers in my area?',
+    'How do I find a reputable {topic} company locally?',
+    'What questions should I ask a local {topic} provider?',
+    'How much does {topic} cost in different regions?',
+    'What local factors affect {topic}?',
+    'Are there local regulations I should know about {topic}?',
+    'How do I compare local {topic} options?',
+  ]
+};
+
+window.generateFAQ = function() {
+  const topic    = document.getElementById('faq-topic').value.trim() || 'this topic';
+  const business = document.getElementById('faq-business').value.trim() || 'our company';
+  const count    = parseInt(document.getElementById('faq-count').value);
+  const intent   = document.getElementById('faq-intent').value;
+
+  const questions = FAQ_TEMPLATES[intent].slice(0, count)
+    .map(q => q.replace(/{topic}/g, topic).replace(/{business}/g, business));
+
+  const itemsHtml = questions.map((q, i) => `
+    <div class="array-group mb-1">
+      <div class="array-group-header">
+        <span class="array-group-title">Q${i+1}</span>
+      </div>
+      <div class="field">
+        <label>Question</label>
+        <input type="text" class="faq-gen-q" value="${escHtml(q)}">
+      </div>
+      <div class="field">
+        <label>Answer <span style="color:var(--text-4);font-weight:400;">(write your expert answer here)</span></label>
+        <textarea class="faq-gen-a" rows="3" placeholder="Write a specific, expert answer based on your real experience. 2-4 sentences. Avoid generic responses."></textarea>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('faqItems').innerHTML = itemsHtml;
+  document.getElementById('faqOutput').style.display = 'block';
+};
+
+window.copyFAQText = function(btn) {
+  const qs = [...document.querySelectorAll('.faq-gen-q')].map(e => e.value);
+  const as = [...document.querySelectorAll('.faq-gen-a')].map(e => e.value || '[Add your answer here]');
+  const text = qs.map((q,i) => `Q: ${q}\nA: ${as[i]}`).join('\n\n');
+  copyText(text, btn);
+};
+
+window.copyFAQSchema = function(btn) {
+  const qs = [...document.querySelectorAll('.faq-gen-q')].map(e => e.value);
+  const as = [...document.querySelectorAll('.faq-gen-a')].map(e => e.value || 'Answer here.');
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": qs.map((q,i) => ({
+      "@type": "Question",
+      "name": q,
+      "acceptedAnswer": { "@type": "Answer", "text": as[i] }
+    }))
+  };
+  const code = `<script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n<\/script>`;
+  copyText(code, btn);
+};
+
+// ── Content Templates ─────────────────────────────────────────────
+const TEMPLATES = [
+  {
+    icon: '🎯',
+    title: 'Direct Answer Opening (AI Overview Magnet)',
+    badge: 'badge-purple',
+    badgeText: 'Highest Impact',
+    template: `[Target keyword/query] is [concise definition in 15-20 words].
+
+[Expand the definition with ONE supporting sentence that adds essential context — 20-30 words].
+
+[Optional: Add one data point or statistic that substantiates the opening claim].
+
+---
+Example:
+"AI SEO is the practice of optimizing websites to be found and recommended by AI systems like Google AI Overview and ChatGPT.
+
+Unlike traditional SEO, which targets keyword rankings, AI SEO focuses on entity authority, structured content, and citation-worthiness — the signals that determine whether AI systems recommend your brand.
+
+According to BrightEdge (2024), 84% of searches now trigger AI-generated content, making AI SEO one of the fastest-growing disciplines in digital marketing."`
+  },
+  {
+    icon: '📋',
+    title: 'How-To Article Structure',
+    badge: 'badge-cyan',
+    badgeText: 'Step Content',
+    template: `# How to [Task] in [Timeframe] (Step-by-Step)
+
+[Task] involves [brief definition]. In this guide, you'll learn exactly how to [outcome], even if [common obstacle].
+
+## What You'll Need
+- [Tool/resource 1]
+- [Tool/resource 2]
+- [Tool/resource 3]
+
+## Step 1: [Action Verb + Specific Task]
+[2-3 sentences explaining this step. Include WHY this step matters, not just what to do.]
+
+**Pro tip:** [One actionable insight that most guides miss]
+
+## Step 2: [Action Verb + Specific Task]
+[2-3 sentences.]
+
+[Continue for all steps...]
+
+## Common Mistakes to Avoid
+- **[Mistake 1]:** [Why it's wrong + what to do instead]
+- **[Mistake 2]:** [Why it's wrong + what to do instead]
+- **[Mistake 3]:** [Why it's wrong + what to do instead]
+
+## Frequently Asked Questions
+
+**How long does [task] take?**
+[Direct answer: X minutes/hours/days, with context on what affects the timeline]
+
+**What if [common problem] happens?**
+[Solution-focused direct answer]
+
+**Is [task] right for [specific audience]?**
+[Direct, honest answer]`
+  },
+  {
+    icon: '⚔️',
+    title: 'Comparison / X vs Y Article',
+    badge: 'badge-amber',
+    badgeText: 'Commercial Intent',
+    template: `# [Option A] vs [Option B]: Which Is Better in [Year]?
+
+[Option A] and [Option B] are [both X type of thing]. The key difference is [one sentence summary of core difference]. This guide breaks down every factor so you can choose the right one for your needs.
+
+## Quick Comparison
+
+| Feature | [Option A] | [Option B] |
+|---------|-----------|-----------|
+| Price | $X/mo | $Y/mo |
+| Best For | [Use case] | [Use case] |
+| [Feature 1] | ✅ Yes | ❌ No |
+| [Feature 2] | ✅ Yes | ✅ Yes |
+| [Feature 3] | ❌ No | ✅ Yes |
+| Support | [Type] | [Type] |
+
+## When to Choose [Option A]
+Choose [Option A] if you:
+- [Specific situation 1]
+- [Specific situation 2]
+- [Specific situation 3]
+
+## When to Choose [Option B]
+Choose [Option B] if you:
+- [Specific situation 1]
+- [Specific situation 2]
+
+## Pricing Breakdown
+[Detailed pricing comparison with actual numbers]
+
+## Our Verdict
+**For [audience A]:** [Option A] wins because [specific reason].
+**For [audience B]:** [Option B] wins because [specific reason].
+**Overall winner:** [Option] — [one-sentence rationale].`
+  },
+  {
+    icon: '📰',
+    title: 'Listicle / "Best X for Y" Format',
+    badge: 'badge-green',
+    badgeText: 'AI Overview Friendly',
+    template: `# The [N] Best [Things] for [Audience] in [Year]
+
+[Direct answer paragraph: "The best [things] for [audience] are [1, 2, 3]. We tested [N] options and ranked them by [criteria]." — 40-60 words]
+
+**Our picks at a glance:**
+1. [Option 1] — Best for [use case]
+2. [Option 2] — Best for [use case]
+3. [Option 3] — Best for [use case]
+
+---
+
+## 1. [Option 1] — Best for [Use Case]
+
+**Price:** $X/month
+**Rating:** ⭐⭐⭐⭐⭐ (X.X/5)
+
+[2-3 sentence description of what it is and who it's for]
+
+**Pros:**
+- [Specific pro with detail]
+- [Specific pro with detail]
+- [Specific pro with detail]
+
+**Cons:**
+- [Honest con]
+- [Honest con]
+
+**Bottom line:** [One sentence verdict]
+
+[Repeat for each option...]
+
+## How We Chose These [Things]
+
+We evaluated [N] options based on:
+- [Criterion 1 with explanation]
+- [Criterion 2 with explanation]
+- [Criterion 3 with explanation]
+
+## Frequently Asked Questions
+
+**What is the best [thing] overall?**
+[Direct answer]
+
+**What's the best free [thing]?**
+[Direct answer]`
+  },
+  {
+    icon: '🎓',
+    title: 'Ultimate Guide / Pillar Page',
+    badge: 'badge-purple',
+    badgeText: 'Topical Authority',
+    template: `# The Ultimate Guide to [Topic] in [Year]
+
+**Quick summary:** [Topic] is [definition]. This guide covers [key areas], so you can [outcome].
+
+## Table of Contents
+1. [What is Topic](#what-is)
+2. [Why Topic Matters](#why-matters)
+3. [How Topic Works](#how-it-works)
+4. [Getting Started](#getting-started)
+5. [Advanced Strategies](#advanced)
+6. [Tools & Resources](#tools)
+7. [Common Mistakes](#mistakes)
+8. [FAQ](#faq)
+
+## What Is [Topic]? {#what-is}
+
+[Topic] is [comprehensive definition, 2-3 sentences].
+
+**Key components of [Topic]:**
+- **[Component 1]:** [Brief explanation]
+- **[Component 2]:** [Brief explanation]
+- **[Component 3]:** [Brief explanation]
+
+## Why [Topic] Matters {#why-matters}
+
+[Compelling opening — include a stat if possible]
+
+[2-3 paragraphs with supporting evidence]
+
+## How [Topic] Works {#how-it-works}
+
+[Step-by-step or process explanation]
+
+[Continue through all sections...]
+
+## Frequently Asked Questions {#faq}
+
+**What is [Topic] in simple terms?**
+[Plain-English definition, 2-3 sentences]
+
+**Is [Topic] right for beginners?**
+[Direct, honest answer]
+
+**How much does [Topic] cost?**
+[Range with context]
+
+**How long until I see results with [Topic]?**
+[Realistic timeline]
+
+**What's the first step to get started with [Topic]?**
+[Specific, actionable answer]`
+  },
+  {
+    icon: '🔬',
+    title: 'Case Study / Results Article',
+    badge: 'badge-cyan',
+    badgeText: 'E-E-A-T Builder',
+    template: `# How [Client/You] Achieved [Specific Result] in [Timeframe]
+
+**Results at a glance:**
+- 📈 [Metric 1]: increased from X to Y (+Z%)
+- 💰 [Metric 2]: from $X to $Y
+- ⏱ [Metric 3]: reduced from X to Y
+- 📅 Timeframe: [Start date] to [End date]
+
+## The Challenge
+
+[Client/Company name] was struggling with [specific problem]. Specifically:
+- [Pain point 1 with numbers if possible]
+- [Pain point 2]
+- [Pain point 3]
+
+Before working with us/implementing this strategy, they experienced [negative outcome].
+
+## The Strategy
+
+We/They implemented a [type] approach focused on [3 key areas]:
+
+### Phase 1: [Strategy Component 1]
+[What was done and why, with specific details]
+
+### Phase 2: [Strategy Component 2]
+[What was done]
+
+### Phase 3: [Strategy Component 3]
+[What was done]
+
+## The Results
+
+After [timeframe], the results exceeded expectations:
+
+**[Metric 1]:** [Specific numbers with context]
+**[Metric 2]:** [Specific numbers]
+**[Metric 3]:** [Specific numbers]
+
+> "[Client quote about results]" — [Name, Title, Company]
+
+## Key Takeaways
+
+If you want to replicate these results, focus on:
+1. [Actionable lesson 1]
+2. [Actionable lesson 2]
+3. [Actionable lesson 3]`
+  }
+];
+
+function renderTemplates() {
+  const list = document.getElementById('templateList');
+  if (list.innerHTML.trim()) return; // already rendered
+
+  list.innerHTML = TEMPLATES.map((t, i) => `
+    <div class="template-card" id="tmpl-${i}">
+      <div class="template-head" onclick="toggleTemplate(${i})">
+        <div class="template-head-title">
+          <span>${t.icon}</span>
+          <span>${t.title}</span>
+          <span class="badge ${t.badge}">${t.badgeText}</span>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="template-chevron">▼</span>
+        </div>
+      </div>
+      <div class="template-body">
+        <div class="flex-between mb-2">
+          <span class="text-sm text-muted">Copy and customize for your content</span>
+          <button class="btn btn-sm btn-outline copy-btn" onclick="copyText(document.getElementById('tmpl-pre-${i}').textContent, this)">Copy Template</button>
+        </div>
+        <pre id="tmpl-pre-${i}" style="white-space:pre-wrap;font-size:0.8rem;max-height:400px;overflow-y:auto;">${escHtml(t.template)}</pre>
+      </div>
+    </div>`).join('');
+}
+
+window.toggleTemplate = function(i) {
+  const card = document.getElementById(`tmpl-${i}`);
+  card.classList.toggle('open');
+};
+
+// Init
+initSnippetInputs();
+</script>
+</body>
+</html>

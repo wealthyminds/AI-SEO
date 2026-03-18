@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>102-Point AI SEO Checklist — AI SEO Launchpad</title>
+<meta name="description" content="The most comprehensive AI SEO checklist. 102 items covering technical SEO, schema markup, entity building, E-E-A-T, AI Overview optimization, and LLM citation strategies.">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.checklist-header {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 0;
+  position: sticky; top: var(--nav-h); z-index: 90;
+}
+.progress-header {
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+}
+.progress-stat { text-align: center; }
+.progress-stat-num { font-size: 1.5rem; font-weight: 700; color: var(--primary-light); }
+.progress-stat-label { font-size: 0.75rem; color: var(--text-4); }
+.progress-main { flex: 1; min-width: 200px; }
+.progress-main-label { font-size: 0.84rem; font-weight: 600; margin-bottom: 0.5rem; display: flex; justify-content: space-between; }
+
+.section-tabs {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+}
+.section-nav {
+  display: flex; overflow-x: auto; gap: 0; scrollbar-width: none;
+  max-width: 1200px; margin: 0 auto;
+}
+.section-nav::-webkit-scrollbar { display: none; }
+.snav-btn {
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.85rem 1.1rem;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font); font-size: 0.84rem; font-weight: 500;
+  color: var(--text-4);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; white-space: nowrap;
+  transition: var(--transition);
+}
+.snav-btn:hover { color: var(--text); }
+.snav-btn.active { color: var(--primary-light); border-bottom-color: var(--primary); }
+.snav-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  font-size: 0.68rem; font-weight: 700;
+  background: var(--bg-4); color: var(--text-4);
+}
+.snav-btn.active .snav-count { background: rgba(124,58,237,0.2); color: var(--primary-light); }
+
+.checklist-body { padding: 2rem 0 5rem; }
+.cat-section { display: none; }
+.cat-section.active { display: block; }
+.cat-title {
+  font-size: 1.25rem; font-weight: 700; margin-bottom: 0.35rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.cat-desc { font-size: 0.88rem; color: var(--text-3); margin-bottom: 1.5rem; }
+.cat-progress { margin-bottom: 1.5rem; }
+
+.toolbar {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
+  border: 1px solid var(--border-2);
+  background: transparent;
+  font-family: var(--font); font-size: 0.8rem; font-weight: 500;
+  color: var(--text-3); cursor: pointer;
+  transition: var(--transition);
+}
+.filter-btn:hover { background: var(--bg-3); color: var(--text); }
+.filter-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.filter-sep { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────── -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚀</div>
+    AI SEO Launchpad
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><span class="icon">🏠</span> Dashboard</a></li>
+    <li><a href="checklist.html" class="active"><span class="icon">✅</span> Checklist</a></li>
+    <li><a href="schema-generator.html"><span class="icon">🧩</span> Schema Generator</a></li>
+    <li><a href="content-optimizer.html"><span class="icon">📊</span> Content Optimizer</a></li>
+    <li><a href="llms-txt.html"><span class="icon">🤖</span> llms.txt Builder</a></li>
+  </ul>
+</nav>
+
+<!-- ── Sticky progress header ───────────────── -->
+<div class="checklist-header">
+  <div class="container">
+    <div class="progress-header">
+      <div class="progress-stat">
+        <div class="progress-stat-num" id="doneCount">0</div>
+        <div class="progress-stat-label">Completed</div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-num" id="totalCount">102</div>
+        <div class="progress-stat-label">Total Items</div>
+      </div>
+      <div class="progress-main">
+        <div class="progress-main-label">
+          <span>Overall Progress</span>
+          <span id="pctLabel">0%</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill" id="progressBar" style="width:0%"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;flex-shrink:0;">
+        <button class="btn btn-sm btn-outline" onclick="exportProgress()">Export</button>
+        <button class="btn btn-sm btn-ghost" onclick="resetAll()">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Section tabs ──────────────────────────── -->
+<div class="section-tabs">
+  <div class="section-nav" id="sectionNav">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- ── Checklist body ────────────────────────── -->
+<div class="checklist-body">
+  <div class="container">
+    <div class="toolbar">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-filter="high" onclick="setFilter('high',this)">🔴 High Priority</button>
+      <button class="filter-btn" data-filter="medium" onclick="setFilter('medium',this)">🟡 Medium</button>
+      <button class="filter-btn" data-filter="low" onclick="setFilter('low',this)">🟢 Low</button>
+      <span class="filter-sep"></span>
+      <button class="filter-btn" data-filter="undone" onclick="setFilter('undone',this)">Show Incomplete</button>
+    </div>
+    <div id="checklistContainer"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>AI SEO Launchpad — <a href="index.html" style="color:var(--primary-light)">Back to Dashboard</a></p>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+<script>
+// ─────────────────────────────────────────────
+//  CHECKLIST DATA
+// ─────────────────────────────────────────────
+const SECTIONS = [
+  {
+    id: 'technical',
+    icon: '⚙️',
+    title: 'Technical Foundation',
+    desc: 'The bedrock that allows AI crawlers and search engines to access, understand, and index your site.',
+    items: [
+      { id:'t1', p:'high', title:'Verify HTTPS/SSL is active sitewide', desc:'AI systems and search engines favour HTTPS. Ensure every page redirects HTTP → HTTPS and your certificate is valid. Check for mixed-content warnings.' },
+      { id:'t2', p:'high', title:'Allow AI crawlers in robots.txt', desc:'Ensure GPTBot, ClaudeBot, PerplexityBot, YouBot, CCBot, cohere-ai, Bytespider, and anthropic-ai are NOT blocked. Add explicit Allow: / rules for each.' },
+      { id:'t3', p:'high', title:'Submit XML sitemap to Google Search Console', desc:'A current, complete sitemap helps AI overviews index your content faster. Include all important pages and keep it updated.' },
+      { id:'t4', p:'medium', title:'Submit XML sitemap to Bing Webmaster Tools', desc:'Bing powers Copilot and other AI features. A sitemap submission ensures full coverage across Microsoft AI products.' },
+      { id:'t5', p:'high', title:'Pass Core Web Vitals (LCP < 2.5s, INP < 200ms, CLS < 0.1)', desc:'Google uses CWV as a ranking signal. Slow pages rank lower and get cited less in AI Overviews. Test with PageSpeed Insights.' },
+      { id:'t6', p:'high', title:'Confirm mobile-friendly design', desc:'Use Google\'s Mobile-Friendly Test. Mobile-first indexing means Google primarily uses the mobile version for ranking and AI feature inclusion.' },
+      { id:'t7', p:'medium', title:'Implement canonical tags on duplicate/similar pages', desc:'Canonical tags prevent dilution of ranking signals. Point duplicate content to the authoritative version so AI systems learn the right URL.' },
+      { id:'t8', p:'medium', title:'Fix all broken links (4xx errors)', desc:'Broken links are a quality signal. Use Screaming Frog or Google Search Console to find and fix 404s. AI systems interpret them as low-quality signals.' },
+      { id:'t9', p:'low', title:'Eliminate redirect chains (max 1 hop)', desc:'A→B→C redirect chains dilute link equity. Use direct 301 redirects. More than one hop can cause crawl issues for both bots and AI crawlers.' },
+      { id:'t10', p:'high', title:'Enable breadcrumb navigation', desc:'Breadcrumbs help AI understand your site hierarchy and generate accurate BreadcrumbList schema. Critical for structured navigation in Knowledge panels.' },
+      { id:'t11', p:'medium', title:'Optimize TTFB (< 800ms)', desc:'Time To First Byte affects crawl rate and user experience. A fast server means AI bots can crawl more of your site in each visit.' },
+      { id:'t12', p:'medium', title:'Use clean URL structure', desc:'Avoid URLs with excessive parameters (e.g., ?id=123&cat=4). Clean URLs like /category/page-name are easier for AI to understand and cite.' },
+      { id:'t13', p:'high', title:'Set up and verify Google Search Console', desc:'Search Console shows you which queries trigger your pages, AI Overview appearances, and crawl issues. Essential baseline monitoring.' },
+      { id:'t14', p:'medium', title:'Set up Bing Webmaster Tools', desc:'Bing\'s webmaster tools provide visibility into Copilot and Microsoft AI indexing, and offer unique insights separate from Google.' },
+      { id:'t15', p:'low', title:'Implement hreflang for multilingual sites', desc:'If you have multiple language versions, hreflang tells AI systems which language version to serve. Critical for international AI visibility.' },
+    ]
+  },
+  {
+    id: 'schema',
+    icon: '🧩',
+    title: 'Schema Markup',
+    desc: 'Structured data is the language AI systems speak. Implementing it correctly dramatically increases AI citation rates.',
+    items: [
+      { id:'s1', p:'high', title:'Add Organization schema to homepage', desc:'Include name, url, logo, description, foundingDate, and sameAs (links to all social profiles, Crunchbase, etc.). This is the foundation of your entity identity.' },
+      { id:'s2', p:'high', title:'Add WebSite schema with SearchAction', desc:'WebSite schema with SearchAction enables the Google Sitelinks Search Box and tells AI exactly what your site is about at the domain level.' },
+      { id:'s3', p:'high', title:'Implement FAQ schema on all key pages', desc:'FAQ schema is the #1 driver of Google AI Overview inclusion. Add at least 5 relevant Q&A pairs to every important page. Generate with our Schema Generator.' },
+      { id:'s4', p:'high', title:'Add Article/BlogPosting schema to all blog content', desc:'Include headline, author, datePublished, dateModified, publisher, and image. Author schema boosts E-E-A-T signals critical for AI citation.' },
+      { id:'s5', p:'high', title:'Implement BreadcrumbList schema on all pages', desc:'Breadcrumb schema helps AI understand your site hierarchy, which is used to generate Knowledge Panel navigational structure.' },
+      { id:'s6', p:'medium', title:'Add HowTo schema to tutorials and guides', desc:'HowTo schema marks up step-by-step content in a way AI loves. It significantly increases chances of being featured in AI Overviews for how-to queries.' },
+      { id:'s7', p:'medium', title:'Add Product schema to all product/service pages', desc:'Include name, description, offers (price/currency), brand, aggregateRating. AI uses this to answer "how much does X cost?" queries.' },
+      { id:'s8', p:'medium', title:'Add LocalBusiness schema (if applicable)', desc:'Include name, address, phone, openingHours, geo coordinates, and priceRange. Essential for local AI search visibility and Maps integration.' },
+      { id:'s9', p:'high', title:'Add Person schema to all author pages', desc:'Include name, jobTitle, description, url, sameAs (LinkedIn, Twitter, etc.). Person schema builds author authority which AI uses for E-E-A-T scoring.' },
+      { id:'s10', p:'medium', title:'Add Review/AggregateRating schema where applicable', desc:'Star ratings in AI results dramatically increase click-through rates. Aggregate ratings also feed AI quality signals.' },
+      { id:'s11', p:'low', title:'Add Event schema for events', desc:'If you host webinars, conferences, or workshops, Event schema gets them into Google\'s event listings and AI-generated event summaries.' },
+      { id:'s12', p:'medium', title:'Add Service schema to service pages', desc:'Explicitly define your services with name, description, provider, areaServed, and serviceType. AI uses this to match you to service-related queries.' },
+      { id:'s13', p:'high', title:'Validate all schema in Google Rich Results Test', desc:'Invalid schema is worse than no schema — it confuses AI systems. Always validate at search.google.com/test/rich-results before deploying.' },
+      { id:'s14', p:'low', title:'Add SpeakableSpecification schema (experimental)', desc:'Marks sections of your page as particularly suitable for text-to-speech. Used by Google Assistant and voice-AI systems.' },
+    ]
+  },
+  {
+    id: 'entity',
+    icon: '🏛',
+    title: 'Entity & Knowledge Panel',
+    desc: 'Your entity presence in Google\'s Knowledge Graph determines how AI describes you. Build it strategically.',
+    items: [
+      { id:'e1', p:'high', title:'Create and verify Google Business Profile', desc:'A verified GBP is the fastest path to a Knowledge Panel for local businesses. Include every field: photos, hours, services, descriptions, products.' },
+      { id:'e2', p:'high', title:'Maintain consistent NAP across all platforms', desc:'Name, Address, Phone must be identical everywhere — your website, GBP, social profiles, directories. Inconsistency confuses AI entity resolution.' },
+      { id:'e3', p:'high', title:'Add sameAs links to Organization schema', desc:'Link to LinkedIn, Twitter/X, Facebook, Crunchbase, Wikipedia, Wikidata, and any industry directories. This tells Google these profiles are all one entity.' },
+      { id:'e4', p:'medium', title:'Create a Wikidata entity', desc:'Wikidata is a key source Google uses to populate Knowledge Panels. Create an entry for your business with accurate, cited data about your organization.' },
+      { id:'e5', p:'medium', title:'Get a Wikipedia article (or improve existing)', desc:'Wikipedia is the gold standard of entity verification for AI. If notable, create one. If one exists, ensure it\'s accurate and well-sourced.' },
+      { id:'e6', p:'medium', title:'Create/optimize Crunchbase profile', desc:'Crunchbase is heavily used by AI systems to understand companies. Complete every field: founding date, team, funding, description, website.' },
+      { id:'e7', p:'high', title:'Complete LinkedIn company page', desc:'LinkedIn is one of the most trusted sources for business entity verification. Fill in every field, add team members, keep it active.' },
+      { id:'e8', p:'medium', title:'Claim all major social profiles', desc:'Even if you\'re not active on every platform, claim your brand name on Twitter/X, Facebook, Instagram, YouTube, TikTok, and Pinterest to prevent squatting and ensure entity consistency.' },
+      { id:'e9', p:'medium', title:'Get listed in industry directories', desc:'Industry-specific directories (G2, Capterra, Clutch, Yelp, Trustpilot) are trusted AI data sources. Get listed and keep them updated.' },
+      { id:'e10', p:'high', title:'Build citations on key authority platforms', desc:'BBB, Trustpilot, Yellow Pages, Yelp — each citation reinforces your entity. Focus on quality platforms that AI systems reference.' },
+    ]
+  },
+  {
+    id: 'eeat',
+    icon: '🏆',
+    title: 'E-E-A-T Signals',
+    desc: 'Experience, Expertise, Authoritativeness, and Trustworthiness are Google\'s quality framework — and AI uses them directly.',
+    items: [
+      { id:'x1', p:'high', title:'Create comprehensive author bio pages', desc:'Each content creator needs a dedicated bio page with: full name, headshot, credentials, experience, specializations, and links to their content and social profiles.' },
+      { id:'x2', p:'high', title:'Add credentials and certifications to author profiles', desc:'List specific certifications (Google Certified, HubSpot Certified, etc.), degrees, years of experience, and notable past clients or employers.' },
+      { id:'x3', p:'high', title:'Build a detailed About page with team information', desc:'Your About page is an AI trust signal. Include: company history, mission, team bios with photos, office location, and why you\'re qualified to provide your service.' },
+      { id:'x4', p:'high', title:'Create a Press/Media page with earned mentions', desc:'Document every media mention, feature, interview, and publication. AI systems use press coverage as authority signals. Link to the actual articles.' },
+      { id:'x5', p:'medium', title:'Display awards, certifications, and partnerships', desc:'Industry awards, technology partnerships (Google Partner, HubSpot Partner), and professional certifications are powerful authority markers AI systems recognize.' },
+      { id:'x6', p:'medium', title:'Document industry association memberships', desc:'Professional associations (AMA, PRSA, industry chambers of commerce) are trust signals. List them on your About page and link to your membership pages.' },
+      { id:'x7', p:'medium', title:'Publish guest posts on authority sites', desc:'Content on industry publications (Forbes, HBR, industry blogs) with author bylines builds topical authority that AI systems use to determine expertise.' },
+      { id:'x8', p:'high', title:'Display full contact information and physical address', desc:'A real address, phone number, and email (not a generic contact form) signals legitimacy. Hide-the-address sites look suspicious to both users and AI.' },
+      { id:'x9', p:'medium', title:'Show transparent privacy policy and terms of service', desc:'Clear legal pages are trust signals. Google\'s Quality Rater Guidelines specifically call out sites lacking these as lower quality.' },
+      { id:'x10', p:'medium', title:'Feature customer reviews and testimonials prominently', desc:'Real customer feedback (especially with names, companies, photos) builds social proof. Integrate Google Reviews, G2, or Trustpilot widgets.' },
+      { id:'x11', p:'high', title:'Publish case studies with specific, measurable results', desc:'"We grew Company X\'s organic traffic by 340% in 6 months" is citation-worthy. Vague testimonials are not. Specificity drives AI citations.' },
+      { id:'x12', p:'low', title:'Document speaking engagements and conferences', desc:'Speaking engagements at industry events are strong authority signals. Create a Speaking page listing past and upcoming talks.' },
+    ]
+  },
+  {
+    id: 'aioverview',
+    icon: '🔍',
+    title: 'AI Overview Optimization',
+    desc: 'Google\'s AI Overviews cite specific content formats. Structure your content for maximum citation probability.',
+    items: [
+      { id:'o1', p:'high', title:'Write a 40-60 word direct answer at the top of each page', desc:'The opening paragraph should directly answer the page\'s main query in 40-60 concise words. AI Overviews pull from this "answer paragraph" more than any other content element.' },
+      { id:'o2', p:'high', title:'Add an FAQ section to every important page (min 5 Q&As)', desc:'FAQ sections are the single most cited content format in AI Overviews. Each Q&A should directly answer a real user question with a 2-4 sentence response.' },
+      { id:'o3', p:'medium', title:'Create "What is X" definition content', desc:'Definitional content ("What is [your category/service]?") is heavily featured in AI Overviews. Write clear, authoritative definitions for every key term in your space.' },
+      { id:'o4', p:'high', title:'Build comparison tables (X vs Y)', desc:'Comparison content is extremely AI-friendly. Create "Tool A vs Tool B" tables with clear criteria. AI systems love structured comparison data for decision queries.' },
+      { id:'o5', p:'high', title:'Use numbered step-by-step instructions', desc:'Numbered lists for processes and procedures are a top AI Overview citation format. Convert any "how to" content into clearly numbered steps with specific actions.' },
+      { id:'o6', p:'high', title:'Include statistics with source citations', desc:'Original statistics, survey data, and research findings are prime AI citation targets. Always cite your sources with links. Original research is the most cited type.' },
+      { id:'o7', p:'medium', title:'Create topic-specific glossaries', desc:'Comprehensive glossaries for your industry or niche rank well for definitional queries and get cited extensively in AI responses to beginner questions.' },
+      { id:'o8', p:'medium', title:'Add "Quick Summary" / TL;DR sections', desc:'A summary box at the top of long-form content provides AI with pre-digested key points, increasing citation rate for informational queries.' },
+      { id:'o9', p:'medium', title:'Include expert quotes with full attribution', desc:'Quotes from named experts with their title and company increase E-E-A-T and provide AI systems with authoritative supporting evidence.' },
+      { id:'o10', p:'high', title:'Mine "People Also Ask" and create content for each', desc:'Open Google, search your main keywords, and screenshot all PAA questions. Create dedicated content (or at least FAQ entries) for each one.' },
+      { id:'o11', p:'high', title:'Use clear H2/H3 heading hierarchy', desc:'AI systems use heading structure to understand content hierarchy. Every H2 should be a searchable question or topic. H3s should be sub-topics of the H2.' },
+      { id:'o12', p:'medium', title:'Add pros/cons tables to review and comparison content', desc:'Structured pros/cons are a highly cited content format. Create them for every product, tool, strategy, or service you discuss.' },
+      { id:'o13', p:'medium', title:'Create "Best X for Y" comparison lists', desc:'"Best CRM for small businesses", "Best SEO tools for agencies" — these query formats dominate AI Overviews. Create comprehensive, regularly updated comparison lists.' },
+      { id:'o14', p:'high', title:'Publish original research, surveys, or industry studies', desc:'Original data is the most cited type of content by AI systems. An annual survey or study makes you the primary source for statistics in your space.' },
+      { id:'o15', p:'medium', title:'Add "Last Updated" dates to all content', desc:'AI systems prefer fresh content for fast-moving topics. Displaying (and actually updating) the last-modified date signals currency and builds trust.' },
+    ]
+  },
+  {
+    id: 'citations',
+    icon: '📰',
+    title: 'LLM Citation Building',
+    desc: 'LLMs like ChatGPT and Claude cite sources they were trained on. Build the footprint that makes you citation-worthy.',
+    items: [
+      { id:'c1', p:'high', title:'Get published in major industry publications', desc:'Guest articles in Forbes, Entrepreneur, HBR, or leading industry blogs with a byline put your expertise into the training datasets of major LLMs. Prioritize sites with high domain authority.' },
+      { id:'c2', p:'high', title:'Participate in HARO/Qwoted/Connectively as an expert', desc:'Respond to journalist queries as an expert source. Getting quoted in news articles creates the citation-worthy content that LLMs learn from. Even 2-3 mentions per month compounds over time.' },
+      { id:'c3', p:'medium', title:'Create Wikipedia-citable content (original research)', desc:'Wikipedia only cites reliable, published sources. If you publish original research, statistics, or studies, they may be cited on Wikipedia — which then flows into AI training data.' },
+      { id:'c4', p:'high', title:'Guest post on high-authority niche sites', desc:'Links and bylines on high-authority sites in your exact niche build topical authority. Aim for DA 50+ sites that are actually read by your target audience.' },
+      { id:'c5', p:'medium', title:'Appear on relevant podcasts and document it', desc:'Podcast appearances are crawled and transcribed by AI. Create a dedicated Podcast Appearances page on your site linking to all episodes where you\'re featured.' },
+      { id:'c6', p:'medium', title:'Build a YouTube presence with educational content', desc:'YouTube is a major LLM training source. Create educational videos with detailed descriptions, transcripts, and chapters that AI can parse and cite.' },
+      { id:'c7', p:'medium', title:'Contribute to Quora with expert-level answers', desc:'Quora answers are heavily indexed and cited. Find questions in your exact specialty and write comprehensive, expert-quality answers with your name and background.' },
+      { id:'c8', p:'low', title:'Participate in relevant Reddit communities', desc:'Reddit is a massive LLM training source. Participate genuinely in subreddits related to your industry. AMAs (Ask Me Anything) are especially high-value citation content.' },
+      { id:'c9', p:'medium', title:'Distribute press releases through wire services', desc:'PR Newswire, Business Wire, and Globe Newswire distribute to thousands of sites. This creates a breadcrumb trail of syndicated content that AI systems discover and learn from.' },
+      { id:'c10', p:'medium', title:'Build relationships with journalists and bloggers', desc:'Long-term media relationships mean consistent earned mentions. Tools like Twitter/X, LinkedIn, and journalist newsletters help you build these relationships systematically.' },
+    ]
+  },
+  {
+    id: 'llm',
+    icon: '🤖',
+    title: 'LLM-Specific Optimization',
+    desc: 'These strategies specifically target how large language models find, learn from, and recommend your brand.',
+    items: [
+      { id:'l1', p:'high', title:'Create your llms.txt file', desc:'Deploy a /llms.txt file to your domain root. This emerging standard gives AI systems a structured overview of your site, brand, and permissions. Use our llms.txt Builder tool.' },
+      { id:'l2', p:'high', title:'Verify AI bots can crawl your site', desc:'Test by fetching your robots.txt and confirming GPTBot, ClaudeBot, PerplexityBot, and CCBot have Allow: / access. Test with individual user-agent fetching tools.' },
+      { id:'l3', p:'high', title:'Create a comprehensive FAQ page', desc:'A dedicated FAQ page covering every question your target audience has about your business, product, pricing, and process is prime LLM training and citation material.' },
+      { id:'l4', p:'high', title:'Write factual, unambiguous product/service descriptions', desc:'AI systems need to match you to queries. Clearly state: what you do, who it\'s for, what problem you solve, what makes you different, and specific outcomes you deliver.' },
+      { id:'l5', p:'medium', title:'Document your brand story and values comprehensively', desc:'Your About page, brand story, and values documentation feeds into how LLMs describe your brand. Be specific, factual, and consistent across all platforms.' },
+      { id:'l6', p:'medium', title:'Create content comparing your product to alternatives', desc:'When someone asks an LLM "X vs Y," you want to be the source. Create comprehensive comparison pages: "[Your Product] vs [Competitor]" with honest, specific comparisons.' },
+      { id:'l7', p:'high', title:'Build a resource hub or knowledge base', desc:'A comprehensive free resource center (guides, templates, calculators) makes you a topical authority. LLMs frequently recommend resource hubs for learning queries.' },
+      { id:'l8', p:'medium', title:'Ensure brand messaging is consistent everywhere', desc:'AI aggregates information from multiple sources. If your site says one thing and LinkedIn says another, AI gets confused and may describe you inaccurately.' },
+      { id:'l9', p:'medium', title:'Create "best for" and use-case content', desc:'"Best for [specific use case]" content maps your product directly to the queries people ask LLMs. "Best CRM for freelancers" — if that\'s your product, own that content.' },
+      { id:'l10', p:'medium', title:'Get listed on LLM-indexed directories', desc:'Directories like G2, Capterra, Clutch, ProductHunt, and AlternativeTo are heavily used as LLM training sources. Maintain accurate, complete listings on each.' },
+    ]
+  },
+  {
+    id: 'pasf',
+    icon: '🔗',
+    title: '"People Also Search For"',
+    desc: 'This feature is driven by entity associations and topical clusters. Build the content web that makes Google associate your brand with key topics.',
+    items: [
+      { id:'p1', p:'high', title:'Build topic clusters with a pillar page + supporting content', desc:'Choose 5-10 core topics. Create one comprehensive pillar page per topic (3,000+ words), then 8-12 supporting articles on sub-topics. Internal link them all together.' },
+      { id:'p2', p:'high', title:'Research PAA questions and create dedicated content', desc:'Use Google, AlsoAsked.com, or AnswerThePublic to map every question in your topic clusters. Create specific content (articles or FAQ entries) for each significant question.' },
+      { id:'p3', p:'high', title:'Implement strategic internal linking between related topics', desc:'Link from pillar pages to supporting content and back. Use descriptive, keyword-rich anchor text that helps AI understand the relationship between topics.' },
+      { id:'p4', p:'high', title:'Optimize for semantic keyword variations', desc:'AI doesn\'t just match exact keywords — it understands semantics. Use related terms, synonyms, and entity-specific vocabulary throughout your content naturally.' },
+      { id:'p5', p:'medium', title:'Create "related topics" sections in your content', desc:'At the bottom of each article, add a "Related Topics" or "You might also like" section linking to semantically related content. This signals topical associations to AI.' },
+      { id:'p6', p:'medium', title:'Build FAQ content covering adjacent user questions', desc:'Map the full universe of questions around each topic — not just the central question but the adjacent questions users ask before, during, and after their main query.' },
+      { id:'p7', p:'medium', title:'Analyze competitors and fill content gaps', desc:'Use tools like Ahrefs, SEMrush, or free Google searches to identify what topics your competitors rank for that you don\'t. Those gaps are your "People Also Search For" opportunities.' },
+      { id:'p8', p:'low', title:'Create entity relationship content', desc:'Write content about how your brand, product, or service relates to adjacent entities: tools you integrate with, people you work with, companies in your ecosystem.' },
+    ]
+  },
+  {
+    id: 'local',
+    icon: '📍',
+    title: 'Local AI SEO',
+    desc: 'For businesses serving local markets, AI is transforming local search. These steps ensure you dominate local AI recommendations.',
+    items: [
+      { id:'loc1', p:'high', title:'Verify and fully optimize Google Business Profile', desc:'GBP is the #1 driver of local AI visibility. Complete every field: photos (min 20+), services, products, description (750 chars), hours, attributes, and Q&A.' },
+      { id:'loc2', p:'high', title:'Add weekly posts to Google Business Profile', desc:'Regular GBP posts signal an active business. Post about offers, news, events, and tips. AI uses recency signals to determine if a business is still operating.' },
+      { id:'loc3', p:'high', title:'Build 50+ consistent local citations', desc:'Citations on local directories (Yelp, Yellow Pages, local chambers, industry directories) with identical NAP data reinforce your entity to Google\'s local AI systems.' },
+      { id:'loc4', p:'high', title:'Actively generate Google reviews (aim for 50+)', desc:'Review quantity and recency are major local AI signals. Create a simple review request system: email follow-up, QR codes, or automated SMS after service completion.' },
+      { id:'loc5', p:'medium', title:'Create location-specific landing pages', desc:'For multi-location businesses, create a unique, non-duplicate page per location. Include local keywords, local testimonials, location schema, and embed a Google Map.' },
+      { id:'loc6', p:'high', title:'Add LocalBusiness schema with full geo data', desc:'Include @type, name, address, telephone, openingHoursSpecification, geo (latitude/longitude), priceRange, and paymentAccepted. This feeds Google Maps AI directly.' },
+      { id:'loc7', p:'medium', title:'Build local backlinks (local news, community sites)', desc:'Links from local news outlets, chambers of commerce, and community sites are powerful local authority signals. Sponsor local events, partner with local nonprofits.' },
+      { id:'loc8', p:'medium', title:'List on Apple Maps, Bing Places, and Waze', desc:'Siri and other Apple AI products use Apple Maps. Bing Places feeds Microsoft Copilot local results. Waze is owned by Google but has a separate data pipeline.' },
+    ]
+  },
+];
+
+// ─────────────────────────────────────────────
+//  RENDER & STATE
+// ─────────────────────────────────────────────
+let state = LS.get('ai-seo-checklist', {});
+let currentSection = 'technical';
+let currentFilter = 'all';
+
+function totalItems() {
+  return SECTIONS.reduce((n, s) => n + s.items.length, 0);
+}
+function doneItems() {
+  return Object.values(state).filter(Boolean).length;
+}
+
+function updateProgress() {
+  const done  = doneItems();
+  const total = totalItems();
+  const pct   = Math.round((done / total) * 100);
+  document.getElementById('doneCount').textContent  = done;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('pctLabel').textContent   = pct + '%';
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function buildNav() {
+  const nav = document.getElementById('sectionNav');
+  SECTIONS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'snav-btn' + (s.id === currentSection ? ' active' : '');
+    btn.dataset.id = s.id;
+    const done  = s.items.filter(i => state[i.id]).length;
+    const total = s.items.length;
+    btn.innerHTML = `${s.icon} ${s.title} <span class="snav-count">${done}/${total}</span>`;
+    btn.onclick = () => switchSection(s.id);
+    nav.appendChild(btn);
+  });
+}
+
+function priorityBadge(p) {
+  const map = { high: 'badge-red', medium: 'badge-amber', low: 'badge-green' };
+  const labels = { high: '🔴 High', medium: '🟡 Medium', low: '🟢 Low' };
+  return `<span class="badge ${map[p]}">${labels[p]}</span>`;
+}
+
+function renderSection(s) {
+  const done  = s.items.filter(i => state[i.id]).length;
+  const total = s.items.length;
+  const pct   = Math.round((done/total)*100);
+
+  const items = s.items.filter(i => {
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'undone') return !state[i.id];
+    return i.p === currentFilter;
+  });
+
+  return `
+    <div class="cat-section active" id="sec-${s.id}">
+      <div class="cat-title">${s.icon} ${s.title}</div>
+      <div class="cat-desc">${s.desc}</div>
+      <div class="cat-progress">
+        <div class="flex-between mb-1">
+          <span class="text-sm text-muted">${done} of ${total} completed</span>
+          <span class="text-sm bold" style="color:var(--primary-light)">${pct}%</span>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      ${items.length === 0
+        ? '<div style="text-align:center;padding:3rem;color:var(--text-4);">No items match this filter in this section.</div>'
+        : items.map(i => renderItem(i)).join('')
+      }
+    </div>`;
+}
+
+function renderItem(item) {
+  const done = !!state[item.id];
+  return `
+    <div class="check-item ${done?'done':''}" id="item-${item.id}" onclick="toggleItem('${item.id}')">
+      <div class="check-box">${done?'✓':''}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="check-title">${item.title}</div>
+        <div class="check-desc">${item.desc}</div>
+        <div class="check-meta">${priorityBadge(item.p)}</div>
+      </div>
+    </div>`;
+}
+
+function toggleItem(id) {
+  state[id] = !state[id];
+  LS.set('ai-seo-checklist', state);
+  const item = SECTIONS.flatMap(s => s.items).find(i => i.id === id);
+  const el   = document.getElementById('item-'+id);
+  if (el) {
+    el.classList.toggle('done', state[id]);
+    el.querySelector('.check-box').textContent = state[id] ? '✓' : '';
+  }
+  updateProgress();
+  updateNavCounts();
+}
+
+function updateNavCounts() {
+  SECTIONS.forEach(s => {
+    const done  = s.items.filter(i => state[i.id]).length;
+    const total = s.items.length;
+    const btn   = document.querySelector(`.snav-btn[data-id="${s.id}"] .snav-count`);
+    if (btn) btn.textContent = `${done}/${total}`;
+  });
+}
+
+function switchSection(id) {
+  currentSection = id;
+  document.querySelectorAll('.snav-btn').forEach(b => b.classList.toggle('active', b.dataset.id === id));
+  const s = SECTIONS.find(x => x.id === id);
+  document.getElementById('checklistContainer').innerHTML = renderSection(s);
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
+  const s = SECTIONS.find(x => x.id === currentSection);
+  document.getElementById('checklistContainer').innerHTML = renderSection(s);
+}
+
+function resetAll() {
+  if (!confirm('Reset all progress? This cannot be undone.')) return;
+  state = {};
+  LS.set('ai-seo-checklist', state);
+  updateProgress();
+  updateNavCounts();
+  switchSection(currentSection);
+}
+
+function exportProgress() {
+  const done  = doneItems();
+  const total = totalItems();
+  let out = `AI SEO LAUNCHPAD — PROGRESS REPORT\n`;
+  out += `Generated: ${new Date().toLocaleDateString()}\n`;
+  out += `Progress: ${done}/${total} (${Math.round(done/total*100)}%)\n\n`;
+  SECTIONS.forEach(s => {
+    const completed = s.items.filter(i => state[i.id]).length;
+    out += `\n== ${s.title} (${completed}/${s.items.length}) ==\n`;
+    s.items.forEach(i => {
+      out += `  [${state[i.id] ? 'X' : ' '}] ${i.title}\n`;
+    });
+  });
+  downloadFile(out, 'ai-seo-checklist-progress.txt', 'text/plain');
+}
+
+// ── Init ───────────────────────────────────
+buildNav();
+updateProgress();
+const firstSec = SECTIONS[0];
+document.getElementById('checklistContainer').innerHTML = renderSection(firstSec);
+</script>
+</body>
+</html>

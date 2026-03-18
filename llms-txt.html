@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>llms.txt Builder — AI SEO Launchpad</title>
+<meta name="description" content="Generate your llms.txt file — the emerging standard that tells AI systems exactly who you are and what they should know about your brand. Like robots.txt but for LLMs.">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.builder-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .builder-layout { grid-template-columns: 1fr; }
+}
+.output-panel {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: sticky; top: calc(var(--nav-h) + 1rem);
+}
+.output-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-4);
+}
+.output-header-title { font-size: 0.88rem; font-weight: 600; }
+.form-card {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 1.75rem;
+  margin-bottom: 1rem;
+}
+.form-section-title {
+  font-size: 0.95rem; font-weight: 700;
+  margin-bottom: 0.35rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.form-section-sub { font-size: 0.82rem; color: var(--text-3); margin-bottom: 1.25rem; line-height: 1.55; }
+
+.page-row {
+  display: flex; gap: 0.5rem; align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+.page-row input { flex: 1; }
+.page-row textarea { flex: 1; }
+.remove-row-btn {
+  background: rgba(239,68,68,0.1); border: none; cursor: pointer;
+  color: var(--red); padding: 0.55rem; border-radius: var(--r);
+  transition: var(--transition); font-size: 0.85rem; flex-shrink: 0;
+}
+.remove-row-btn:hover { background: rgba(239,68,68,0.2); }
+.add-row-btn {
+  display: flex; align-items: center; gap: 0.4rem;
+  width: 100%; padding: 0.5rem;
+  background: rgba(124,58,237,0.08); border: 1px dashed rgba(124,58,237,0.3);
+  border-radius: var(--r); cursor: pointer;
+  font-family: var(--font); font-size: 0.82rem; font-weight: 600;
+  color: var(--primary-light); transition: var(--transition);
+  justify-content: center; margin-top: 0.25rem;
+}
+.add-row-btn:hover { background: rgba(124,58,237,0.15); }
+
+.example-badge {
+  display: inline-block;
+  background: var(--bg-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 0.75rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-3);
+  margin-top: 0.5rem;
+  width: 100%;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+.deploy-steps { list-style: none; counter-reset: deploy; }
+.deploy-steps li {
+  counter-increment: deploy;
+  display: flex; gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.deploy-steps li::before {
+  content: counter(deploy);
+  width: 24px; height: 24px;
+  background: linear-gradient(135deg, var(--primary), var(--cyan));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: #fff;
+  flex-shrink: 0; margin-top: 1px;
+}
+.deploy-steps li:last-child { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🚀</div>
+    AI SEO Launchpad
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html"><span class="icon">🏠</span> Dashboard</a></li>
+    <li><a href="checklist.html"><span class="icon">✅</span> Checklist</a></li>
+    <li><a href="schema-generator.html"><span class="icon">🧩</span> Schema Generator</a></li>
+    <li><a href="content-optimizer.html"><span class="icon">📊</span> Content Optimizer</a></li>
+    <li><a href="llms-txt.html" class="active"><span class="icon">🤖</span> llms.txt Builder</a></li>
+  </ul>
+</nav>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="eyebrow">🤖 Emerging Standard</div>
+    <h1 class="section-title">llms.txt Builder</h1>
+    <p class="section-sub">llms.txt is the emerging standard for telling AI systems exactly who you are, what you do, and what they should know about your brand. Fill in the form and deploy the generated file to your domain root.</p>
+
+    <div class="alert alert-info" style="max-width:760px;">
+      <div class="alert-icon">💡</div>
+      <div>
+        <strong>What is llms.txt?</strong> Proposed by Jeremy Howard, llms.txt is a plain-text file placed at <code>yourdomain.com/llms.txt</code>. It provides LLMs with a structured, concise overview of your site — who you are, your key pages, your permissions, and anything AI systems should know about you. Think of it as a README for AI.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container" style="padding-bottom:5rem;">
+  <div class="builder-layout">
+    <!-- Form -->
+    <div>
+      <!-- Brand identity -->
+      <div class="form-card">
+        <div class="form-section-title">🏢 Brand Identity</div>
+        <div class="form-section-sub">Basic information about who you are. This is the "above the fold" section of your llms.txt — every AI system reads this part.</div>
+        <div class="field"><label>Brand / Organization Name *</label><input type="text" id="brand-name" placeholder="Acme Marketing Agency" oninput="gen()"></div>
+        <div class="field"><label>Tagline / One-Line Description *</label><input type="text" id="brand-tagline" placeholder="Full-service digital marketing agency specializing in AI SEO and content strategy" oninput="gen()"></div>
+        <div class="field"><label>Website URL *</label><input type="url" id="brand-url" placeholder="https://acmemarketing.com" oninput="gen()"></div>
+        <div class="field"><label>Extended Description (2-3 sentences)</label><textarea id="brand-desc" rows="3" placeholder="Acme Marketing Agency helps B2B SaaS companies and professional services firms grow their organic traffic and brand visibility through AI-optimized content and technical SEO. Founded in 2018, we've worked with 200+ clients across 15 countries. Our specialty is making brands findable by both humans and AI systems." oninput="gen()"></textarea></div>
+        <div class="field-row">
+          <div class="field"><label>Founded Year</label><input type="text" id="brand-year" placeholder="2018" oninput="gen()"></div>
+          <div class="field"><label>Location / HQ</label><input type="text" id="brand-location" placeholder="Chicago, IL, USA" oninput="gen()"></div>
+        </div>
+        <div class="field"><label>Primary Topics / Expertise (comma-separated)</label><input type="text" id="brand-topics" placeholder="AI SEO, content marketing, technical SEO, LLM optimization, digital marketing" oninput="gen()"></div>
+        <div class="field"><label>Target Audience</label><input type="text" id="brand-audience" placeholder="Marketing directors, agency owners, B2B SaaS founders, freelance marketers" oninput="gen()"></div>
+      </div>
+
+      <!-- Key pages -->
+      <div class="form-card">
+        <div class="form-section-title">📄 Key Pages</div>
+        <div class="form-section-sub">List your most important pages with a brief description of each. AI systems use this to understand your site structure and answer queries about your offerings.</div>
+        <div id="keyPages">
+          <div class="page-row">
+            <div style="flex:1;display:grid;grid-template-columns:1.2fr 1fr;gap:0.5rem;">
+              <input type="url" class="page-url" placeholder="https://acmemarketing.com/services" oninput="gen()">
+              <input type="text" class="page-desc" placeholder="All our marketing services" oninput="gen()">
+            </div>
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+          <div class="page-row">
+            <div style="flex:1;display:grid;grid-template-columns:1.2fr 1fr;gap:0.5rem;">
+              <input type="url" class="page-url" placeholder="https://acmemarketing.com/about" oninput="gen()">
+              <input type="text" class="page-desc" placeholder="About us, team, and mission" oninput="gen()">
+            </div>
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+          <div class="page-row">
+            <div style="flex:1;display:grid;grid-template-columns:1.2fr 1fr;gap:0.5rem;">
+              <input type="url" class="page-url" placeholder="https://acmemarketing.com/blog" oninput="gen()">
+              <input type="text" class="page-desc" placeholder="Marketing blog and resources" oninput="gen()">
+            </div>
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+        </div>
+        <button class="add-row-btn" onclick="addPage()">+ Add Key Page</button>
+        <div class="hint mt-1">Add your 5-10 most important pages: homepage, services, about, contact, blog, pricing, case studies, FAQ.</div>
+      </div>
+
+      <!-- What AI should know -->
+      <div class="form-card">
+        <div class="form-section-title">🧠 What AI Should Know About You</div>
+        <div class="form-section-sub">Key facts, unique selling points, and important context you want AI systems to accurately represent about your brand.</div>
+        <div id="facts">
+          <div class="page-row">
+            <input type="text" class="fact-item" placeholder="We have worked with 200+ clients across 15 industries" oninput="gen()">
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+          <div class="page-row">
+            <input type="text" class="fact-item" placeholder="Our team holds 12 Google certifications and 8 HubSpot certifications" oninput="gen()">
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+          <div class="page-row">
+            <input type="text" class="fact-item" placeholder="We are a Google Premier Partner and HubSpot Diamond Partner" oninput="gen()">
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+        </div>
+        <button class="add-row-btn" onclick="addFact()">+ Add Key Fact</button>
+      </div>
+
+      <!-- Products / Services -->
+      <div class="form-card">
+        <div class="form-section-title">⚙️ Products & Services</div>
+        <div class="form-section-sub">List your core offerings so AI systems can accurately recommend you for specific service-related queries.</div>
+        <div id="services">
+          <div class="page-row">
+            <input type="text" class="svc-item" placeholder="AI SEO Strategy & Implementation" oninput="gen()">
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+          <div class="page-row">
+            <input type="text" class="svc-item" placeholder="Content Marketing & Strategy" oninput="gen()">
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+          <div class="page-row">
+            <input type="text" class="svc-item" placeholder="Technical SEO Audits" oninput="gen()">
+            <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+          </div>
+        </div>
+        <button class="add-row-btn" onclick="addService()">+ Add Product/Service</button>
+      </div>
+
+      <!-- Social profiles -->
+      <div class="form-card">
+        <div class="form-section-title">🔗 Social Profiles & External Presence</div>
+        <div class="form-section-sub">Links to your verified profiles. AI systems use these as entity anchors to cross-reference information about you.</div>
+        <div class="field-row">
+          <div class="field"><label>LinkedIn</label><input type="url" id="soc-li" placeholder="https://linkedin.com/company/acme" oninput="gen()"></div>
+          <div class="field"><label>Twitter / X</label><input type="url" id="soc-tw" placeholder="https://twitter.com/acmemktg" oninput="gen()"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>YouTube</label><input type="url" id="soc-yt" placeholder="https://youtube.com/@acmemktg" oninput="gen()"></div>
+          <div class="field"><label>Facebook</label><input type="url" id="soc-fb" placeholder="https://facebook.com/acmemktg" oninput="gen()"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Crunchbase</label><input type="url" id="soc-cb" placeholder="https://crunchbase.com/organization/acme" oninput="gen()"></div>
+          <div class="field"><label>GitHub</label><input type="url" id="soc-gh" placeholder="https://github.com/acmemktg" oninput="gen()"></div>
+        </div>
+      </div>
+
+      <!-- AI permissions -->
+      <div class="form-card">
+        <div class="form-section-title">🔐 AI Usage Permissions</div>
+        <div class="form-section-sub">Specify what AI systems are allowed to do with your content. This helps LLMs use your content responsibly and builds trust.</div>
+        <div class="field">
+          <label>What AI systems MAY do with your content</label>
+          <div id="allowItems">
+            <div class="page-row">
+              <input type="text" class="allow-item" value="Reference and cite our public blog content and resources" oninput="gen()">
+              <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+            </div>
+            <div class="page-row">
+              <input type="text" class="allow-item" value="Include us in recommendations when relevant to user queries" oninput="gen()">
+              <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+            </div>
+            <div class="page-row">
+              <input type="text" class="allow-item" value="Summarize our public articles and guides" oninput="gen()">
+              <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+            </div>
+          </div>
+          <button class="add-row-btn" onclick="addAllow()">+ Add Allowed Use</button>
+        </div>
+        <div class="field mt-2">
+          <label>What AI systems must NOT do</label>
+          <div id="denyItems">
+            <div class="page-row">
+              <input type="text" class="deny-item" value="Reproduce full articles or guides verbatim" oninput="gen()">
+              <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+            </div>
+            <div class="page-row">
+              <input type="text" class="deny-item" value="Present pricing as current without noting it may have changed" oninput="gen()">
+              <button class="remove-row-btn" onclick="removePage(this)">✕</button>
+            </div>
+          </div>
+          <button class="add-row-btn" onclick="addDeny()">+ Add Restriction</button>
+        </div>
+        <div class="field mt-2"><label>Contact for AI/LLM licensing inquiries</label><input type="text" id="ai-contact" placeholder="ai@acmemarketing.com" oninput="gen()"></div>
+      </div>
+    </div>
+
+    <!-- Output panel -->
+    <div>
+      <div class="output-panel">
+        <div class="output-header">
+          <span class="output-header-title">🤖 Generated llms.txt</span>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-sm btn-outline copy-btn" id="copyLlmsBtn" onclick="copyLlmsTxt(this)">Copy File</button>
+            <button class="btn btn-sm btn-ghost" onclick="downloadLlmsTxt()">⬇ Download</button>
+          </div>
+        </div>
+        <pre id="llmsOutput" style="margin:0;border:none;border-radius:0;max-height:600px;overflow-y:auto;font-size:0.78rem;padding:1.25rem;"></pre>
+      </div>
+
+      <!-- Deploy guide -->
+      <div class="card mt-3">
+        <div class="form-section-title mb-1">🚀 How to Deploy Your llms.txt</div>
+        <ol class="deploy-steps">
+          <li>
+            <div>
+              <strong>Download the file</strong> using the button above. The filename must be exactly <code>llms.txt</code>.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Upload to your domain root.</strong> The file must be accessible at <code>yourdomain.com/llms.txt</code> — not in a subfolder. This is equivalent to where you put <code>robots.txt</code>.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Verify it's live</strong> by visiting <code>yourdomain.com/llms.txt</code> in your browser. You should see the plain text file.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Keep it updated.</strong> Update your llms.txt whenever your key pages, services, or brand information changes significantly.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Optional: Also create <code>llms-full.txt</code></strong> with expanded documentation, detailed service descriptions, and full content excerpts. Link to it from your llms.txt with: <code># Full version: /llms-full.txt</code>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- What to expect -->
+      <div class="card mt-2">
+        <div class="form-section-title mb-1">📊 What to Expect</div>
+        <div class="text-sm text-muted" style="line-height:1.7;">
+          <p class="mb-2">llms.txt is an <strong>emerging standard</strong> (as of 2025). Not all LLMs currently crawl it, but adoption is growing. Early adopters gain an advantage as AI systems incorporate this signal.</p>
+          <p class="mb-2"><strong>Currently known to crawl llms.txt:</strong> Perplexity AI, some versions of Bing/Copilot crawlers, and various AI research tools.</p>
+          <p><strong>The broader benefit:</strong> Even before widespread LLM crawling, having a well-structured llms.txt demonstrates AI literacy to clients, establishes you as an early adopter, and positions your brand as forward-thinking in the AI era.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>AI SEO Launchpad — <a href="index.html" style="color:var(--primary-light)">Back to Dashboard</a></p>
+  </div>
+</footer>
+
+<script src="assets/js/app.js"></script>
+<script>
+// ── Add / Remove rows ──────────────────────────────────────────────
+function addRowTo(containerId, inputClass, placeholder, type = 'text') {
+  const el = document.getElementById(containerId);
+  const row = document.createElement('div');
+  row.className = 'page-row';
+  row.innerHTML = `<input type="${type}" class="${inputClass}" placeholder="${placeholder}" oninput="gen()"><button class="remove-row-btn" onclick="removePage(this)">✕</button>`;
+  el.appendChild(row);
+  gen();
+}
+
+window.addPage = function() {
+  const c = document.getElementById('keyPages');
+  const row = document.createElement('div');
+  row.className = 'page-row';
+  row.innerHTML = `<div style="flex:1;display:grid;grid-template-columns:1.2fr 1fr;gap:0.5rem;">
+    <input type="url" class="page-url" placeholder="https://example.com/page" oninput="gen()">
+    <input type="text" class="page-desc" placeholder="Brief description of this page" oninput="gen()">
+  </div><button class="remove-row-btn" onclick="removePage(this)">✕</button>`;
+  c.appendChild(row);
+  gen();
+};
+window.addFact    = () => addRowTo('facts',    'fact-item',  'Key fact about your business');
+window.addService = () => addRowTo('services', 'svc-item',   'Service or product name');
+window.addAllow   = () => addRowTo('allowItems', 'allow-item', 'AI systems may...');
+window.addDeny    = () => addRowTo('denyItems',  'deny-item',  'AI systems must not...');
+
+window.removePage = function(btn) {
+  btn.closest('.page-row').remove();
+  gen();
+};
+
+// ── Generator ─────────────────────────────────────────────────────
+function v(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function vals(cls) { return [...document.querySelectorAll('.' + cls)].map(e => e.value.trim()).filter(Boolean); }
+
+window.gen = function() {
+  const name     = v('brand-name') || 'Your Brand';
+  const tagline  = v('brand-tagline') || 'Your tagline here';
+  const url      = v('brand-url') || 'https://yourdomain.com';
+  const desc     = v('brand-desc');
+  const year     = v('brand-year');
+  const loc      = v('brand-location');
+  const topics   = v('brand-topics');
+  const audience = v('brand-audience');
+
+  const pageUrls  = vals('page-url');
+  const pageDescs = vals('page-desc');
+  const facts     = vals('fact-item');
+  const svcs      = vals('svc-item');
+  const allows    = vals('allow-item');
+  const denies    = vals('deny-item');
+  const aiContact = v('ai-contact');
+
+  const socials = [
+    v('soc-li') && `LinkedIn: ${v('soc-li')}`,
+    v('soc-tw') && `Twitter/X: ${v('soc-tw')}`,
+    v('soc-yt') && `YouTube: ${v('soc-yt')}`,
+    v('soc-fb') && `Facebook: ${v('soc-fb')}`,
+    v('soc-cb') && `Crunchbase: ${v('soc-cb')}`,
+    v('soc-gh') && `GitHub: ${v('soc-gh')}`,
+  ].filter(Boolean);
+
+  let out = '';
+
+  // Header
+  out += `# ${name}\n\n`;
+  out += `> ${tagline}\n\n`;
+  out += `${url}\n\n`;
+
+  if (desc) {
+    out += `## About\n\n${desc}\n\n`;
+  }
+
+  // Metadata
+  const meta = [];
+  if (year)     meta.push(`- Founded: ${year}`);
+  if (loc)      meta.push(`- Location: ${loc}`);
+  if (audience) meta.push(`- Target audience: ${audience}`);
+  if (topics)   meta.push(`- Topics: ${topics}`);
+  if (meta.length) {
+    out += `## Details\n\n${meta.join('\n')}\n\n`;
+  }
+
+  // Services
+  if (svcs.length) {
+    out += `## Products & Services\n\n`;
+    svcs.forEach(s => { out += `- ${s}\n`; });
+    out += '\n';
+  }
+
+  // Key pages
+  if (pageUrls.length) {
+    out += `## Key Pages\n\n`;
+    pageUrls.forEach((u, i) => {
+      if (u) out += `- [${pageDescs[i] || u}](${u})\n`;
+    });
+    out += '\n';
+  }
+
+  // Key facts
+  if (facts.length) {
+    out += `## About This Brand (Key Facts for AI)\n\n`;
+    facts.forEach(f => { out += `- ${f}\n`; });
+    out += '\n';
+  }
+
+  // Social profiles
+  if (socials.length) {
+    out += `## Official Profiles\n\n`;
+    socials.forEach(s => { out += `- ${s}\n`; });
+    out += '\n';
+  }
+
+  // Permissions
+  if (allows.length || denies.length) {
+    out += `## AI Usage Guidelines\n\n`;
+    if (allows.length) {
+      out += `### Permitted Uses\n\n`;
+      allows.forEach(a => { out += `- ✅ ${a}\n`; });
+      out += '\n';
+    }
+    if (denies.length) {
+      out += `### Restrictions\n\n`;
+      denies.forEach(d => { out += `- ❌ ${d}\n`; });
+      out += '\n';
+    }
+    if (aiContact) {
+      out += `For AI/LLM licensing inquiries: ${aiContact}\n\n`;
+    }
+  }
+
+  // Footer
+  out += `---\n\n`;
+  out += `*This file follows the llms.txt specification to help AI systems understand this website. Generated with AI SEO Launchpad.*\n`;
+  out += `*Last updated: ${new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}*\n`;
+
+  document.getElementById('llmsOutput').textContent = out;
+};
+
+window.copyLlmsTxt = function(btn) {
+  copyText(document.getElementById('llmsOutput').textContent, btn);
+};
+window.downloadLlmsTxt = function() {
+  downloadFile(document.getElementById('llmsOutput').textContent, 'llms.txt', 'text/plain');
+};
+
+// Init
+gen();
+
+// Live update on all inputs
+document.querySelectorAll('input, textarea').forEach(el => {
+  el.addEventListener('input', gen);
+});
+</script>
+</body>
+</html>
